@@ -142,6 +142,22 @@ function openMain() {
         .github-btn:hover {
           background-color: #9147b3;
         }
+
+        .sidebar-footer {
+  margin-top: auto;
+  padding: 15px 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+  background-color: #800080;
+  display: block;
+}
+.sidebar-footer:hover {
+  color: #da70d6;
+}
+
       </style>
     </head>
     <body>
@@ -152,6 +168,7 @@ function openMain() {
         <button class="nav-button active" onclick="switchTab('Games', this)">Games</button>
         <button class="nav-button" onclick="switchTab('More', this)">More</button>
         <button class="nav-button" onclick="switchTab('Partners', this)">Partners</button>
+        <a href="https://github.com/sevisadev/" target="_blank" class="sidebar-footer">Made By Sevv_wevvy</a>
       </div>
 
       <div class="main-content" id="mainContent">
@@ -202,7 +219,7 @@ function openMain() {
 
         const tabLinks = {
           "Games": [
-            { name: "Snake Game", url: "https://raw.githubusercontent.com/user/repo/branch/snake.html" },
+            { name: "Snake Game", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/snake.html" },
           ],
           "More": [
           ],
