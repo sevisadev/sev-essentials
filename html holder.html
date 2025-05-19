@@ -50,35 +50,114 @@ function openMain() {
         body {
           font-family: "Times New Roman", serif;
           background-color: #000000;
-          padding: 20px;
-          color: #800080;
           margin: 0;
           overflow: hidden;
+          color: #800080;
         }
+
         canvas {
           position: fixed;
           top: 0;
           left: 0;
           z-index: -1;
         }
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 220px;
+          height: 100%;
+          background-color: #800080;
+          color: #ffffff;
+          box-sizing: border-box;
+          padding-top: 0;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .sidebar h1 {
+          text-align: center;
+          font-size: 30px;
+          color: #da70d6;
+          margin: 0;
+          padding: 20px 10px;
+          background-color: #800080;
+        }
+
+        .nav-button {
+          display: block;
+          width: 100%;
+          padding: 12px;
+          background-color: #aa66cc;
+          color: white;
+          border: none;
+          text-align: left;
+          font-size: 16px;
+          cursor: pointer;
+          border-top-right-radius: 20px;
+          border-bottom-right-radius: 20px;
+          margin-bottom: 5px;
+          transition: background 0.3s;
+        }
+
+        .nav-button:hover {
+          background-color: #888;
+        }
+
+        .nav-button.active {
+          background-color: #000;
+        }
+
+        .main-content {
+          margin-left: 220px;
+          padding: 20px;
+          transition: margin-left 0.4s ease;
+        }
+
+        h1.title {
+          color: #da70d6;
+        }
+
+        #linkList {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          gap: 15px;
+          margin-top: 20px;
+        }
+
+        .github-btn {
+          padding: 12px;
+          background-color: #aa66cc;
+          border: none;
+          border-radius: 10px;
+          color: white;
+          font-size: 14px;
+          cursor: pointer;
+          text-align: center;
+        }
+
+        .github-btn:hover {
+          background-color: #9147b3;
+        }
       </style>
     </head>
     <body>
       <canvas id="bgCanvas"></canvas>
 
-      <h1>Sev Essentials</h1>
-      <button onclick="openGames()" style="
-  font-size: 20px;
-  padding: 12px 24px;
-  background-color: #cccccc;
-  color: #800080;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Times New Roman', serif;
-">
-  Games
-</button>
+      <div class="sidebar" id="sidebar">
+        <h1>Sev Essentials</h1>
+        <button class="nav-button active" onclick="switchTab('Games', this)">Games</button>
+        <button class="nav-button" onclick="switchTab('More', this)">More</button>
+        <button class="nav-button" onclick="switchTab('Partners', this)">Partners</button>
+      </div>
+
+      <div class="main-content" id="mainContent">
+        <h1 class="title" id="tabTitle">Games</h1>
+        <div id="linkList"></div>
+      </div>
 
       <script>
         const canvas = document.getElementById('bgCanvas');
@@ -88,7 +167,6 @@ function openMain() {
         let height = canvas.height = window.innerHeight;
 
         const spheres = [];
-
         for (let i = 0; i < 50; i++) {
           spheres.push({
             x: Math.random() * width,
@@ -121,6 +199,53 @@ function openMain() {
           width = canvas.width = window.innerWidth;
           height = canvas.height = window.innerHeight;
         });
+
+        const tabLinks = {
+          "Games": [
+            { name: "Snake Game", url: "https://raw.githubusercontent.com/user/repo/branch/snake.html" },
+            { name: "Tetris", url: "https://raw.githubusercontent.com/user/repo/branch/tetris.html" }
+          ],
+          "More": [
+            { name: "About", url: "https://raw.githubusercontent.com/user/repo/branch/about.html" },
+            { name: "Settings", url: "https://raw.githubusercontent.com/user/repo/branch/settings.html" }
+          ],
+          "Partners": [
+            { name: "Partner 1", url: "https://raw.githubusercontent.com/user/repo/branch/partner1.html" },
+            { name: "Partner 2", url: "https://raw.githubusercontent.com/user/repo/branch/partner2.html" }
+          ]
+        };
+
+        function switchTab(tabName, btn) {
+          document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          document.getElementById('tabTitle').innerText = tabName;
+
+          const listContainer = document.getElementById('linkList');
+          listContainer.innerHTML = '';
+
+          (tabLinks[tabName] || []).forEach(link => {
+            const button = document.createElement('button');
+            button.className = 'github-btn';
+            button.innerText = link.name;
+            button.onclick = () => openGitHubHTML(link.url);
+            listContainer.appendChild(button);
+          });
+        }
+
+        function openGitHubHTML(url) {
+          fetch(url)
+            .then(response => response.text())
+            .then(html => {
+              const newTab = window.open('about:blank', '_blank');
+              newTab.document.write(html);
+              newTab.document.close();
+            })
+            .catch(err => alert("Failed to load HTML: " + err));
+        }
+
+        // Load default tab
+        switchTab("Games", document.querySelector(".nav-button.active"));
       <\/script>
     </body>
     </html>
@@ -128,9 +253,9 @@ function openMain() {
 
   newWindow.document.close();
 }
+
 </script>
 
 </body>
 </html>
-
 
