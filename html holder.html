@@ -17,25 +17,31 @@
       left: 0;
       z-index: -1;
     }
+    h2 {
+      color: #da70d6;
+    }
+    button {
+      font-size: 20px;
+      padding: 12px 24px;
+      background-color: #8a2be2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Times New Roman', serif;
+    }
+    button:hover {
+      background-color: #6a0dad;
+    }
   </style>
 </head>
 <body>
 
 <h2>Sev Essentials</h2>
 
-<button onclick="openMain()" style="
-  font-size: 20px;
-  padding: 12px 24px;
-  background-color: #cccccc;
-  color: #800080;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Times New Roman', serif;
-">
+<button onclick="openMain()">
   Open
 </button>
-
 
 <script>
 function openMain() {
@@ -49,10 +55,10 @@ function openMain() {
       <style>
         body {
           font-family: "Times New Roman", serif;
-          background-color: #000000;
+          background-color: #4b097b;
           margin: 0;
           overflow: hidden;
-          color: #800080;
+          color: #ffffff;
         }
 
         canvas {
@@ -68,7 +74,7 @@ function openMain() {
           left: 0;
           width: 220px;
           height: 100%;
-          background-color: #800080;
+          background-color: #8a2be2;
           color: #ffffff;
           box-sizing: border-box;
           padding-top: 0;
@@ -81,17 +87,17 @@ function openMain() {
         .sidebar h1 {
           text-align: center;
           font-size: 30px;
-          color: #da70d6;
+          color: #ffffff;
           margin: 0;
           padding: 20px 10px;
-          background-color: #800080;
+          background-color: #8a2be2;
         }
 
         .nav-button {
           display: block;
           width: 90%;
           padding: 12px;
-          background-color: #aa66cc;
+          background-color: #8a2be2;
           color: white;
           border: none;
           text-align: left;
@@ -104,11 +110,11 @@ function openMain() {
         }
 
         .nav-button:hover {
-          background-color: #888;
+          background-color: #6a0dad;
         }
 
         .nav-button.active {
-          background-color: #000;
+          background-color: #4b097b;
         }
 
         .main-content {
@@ -118,7 +124,7 @@ function openMain() {
         }
 
         h1.title {
-          color: #da70d6;
+          color: #ffffff;
         }
 
         #linkList {
@@ -130,7 +136,7 @@ function openMain() {
 
         .github-btn {
           padding: 12px;
-          background-color: #aa66cc;
+          background-color: #8a2be2;
           border: none;
           border-radius: 10px;
           color: white;
@@ -140,23 +146,23 @@ function openMain() {
         }
 
         .github-btn:hover {
-          background-color: #9147b3;
+          background-color: #6a0dad;
         }
 
         .sidebar-footer {
-  margin-top: auto;
-  padding: 15px 10px;
-  text-align: center;
-  font-size: 14px;
-  color: #ffffff;
-  text-decoration: underline;
-  cursor: pointer;
-  background-color: #800080;
-  display: block;
-}
-.sidebar-footer:hover {
-  color: #da70d6;
-}
+          margin-top: auto;
+          padding: 15px 10px;
+          text-align: center;
+          font-size: 14px;
+          color: #ffffff;
+          text-decoration: underline;
+          cursor: pointer;
+          background-color: #8a2be2;
+          display: block;
+        }
+        .sidebar-footer:hover {
+          color: #b9b9b9;
+        }
 
       </style>
     </head>
@@ -187,9 +193,9 @@ function openMain() {
         for (let i = 0; i < 50; i++) {
           spheres.push({
             x: Math.random() * (width - 220) + 220,
-    y: Math.random() * (height - 50),
-    radius: Math.random() * 5 + 2,
-    speed: Math.random() * 2 + 0.5
+            y: Math.random() * (height - 50),
+            radius: Math.random() * 5 + 2,
+            speed: Math.random() * 2 + 0.5
           });
         }
 
@@ -274,4 +280,3 @@ function openMain() {
 
 </body>
 </html>
-
