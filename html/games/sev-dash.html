@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sev Dash</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      background: #8a2be2;
+      display: block;
+    }
+
+    #score {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2em;
+      color: #ffffff;
+      z-index: 2;
+    }
+
+    #gameOverScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .modalBox {
+      background-color: #6a0dad;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 30px #000;
+    }
+
+    #gameOverText {
+      font-size: 2.5em;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    #restart {
+      font-size: 1.5em;
+      background: #8a2be2;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #restart:hover {
+      background: #ffffff;
+      color: #6a0dad;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Score: 0</div>
+  <div id="gameOverScreen">
+    <div class="modalBox">
+      <div id="gameOverText">GAME OVER</div>
+      <button id="restart" onclick="restartGame()">Restart</button>
+    </div>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreDisplay = document.getElementById("score");
+    const gameOverScreen = document.getElementById("gameOverScreen");
+
+    let player, gravity, obstacles, speed, score, gameOver;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    function reset() {
+      player = {
+        x: 80,
+        y: canvas.height - 100,
+        width: 40,
+        height: 40,
+        vy: 0,
+        jumping: false
+      };
+
+      gravity = 1.2;
+      obstacles = [];
+      speed = 6;
+      score = 0;
+      gameOver = false;
+      scoreDisplay.textContent = "Score: 0";
+      gameOverScreen.style.display = "none";
+
+      loop();
+    }
+
+    function spawnObstacle() {
+      const height = 40 + Math.random() * 60;
+      obstacles.push({
+        x: canvas.width,
+        y: canvas.height - height,
+        width: 40,
+        height: height
+      });
+    }
+
+    let obstacleTimer = 0;
+
+    function loop() {
+      if (gameOver) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Background
+      ctx.fillStyle = "#6a0dad";
+      ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
+
+      // Player
+      player.vy += gravity;
+      player.y += player.vy;
+      if (player.y + player.height >= canvas.height - 60) {
+        player.y = canvas.height - 60 - player.height;
+        player.vy = 0;
+        player.jumping = false;
+      }
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+
+      // Obstacles
+      obstacleTimer++;
+      if (obstacleTimer > 80) {
+        spawnObstacle();
+        obstacleTimer = 0;
+      }
+
+      for (let i = 0; i < obstacles.length; i++) {
+        const obs = obstacles[i];
+        obs.x -= speed;
+        ctx.fillStyle = "#4b097b";
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+        // Collision
+        if (
+          player.x < obs.x + obs.width &&
+          player.x + player.width > obs.x &&
+          player.y < obs.y + obs.height &&
+          player.y + player.height > obs.y
+        ) {
+          endGame();
+        }
+      }
+
+      // Remove off-screen obstacles
+      obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+
+      // Score
+      score++;
+      scoreDisplay.textContent = `Score: ${score}`;
+
+      // Increase difficulty
+      if (score % 500 === 0) speed += 0.5;
+
+      requestAnimationFrame(loop);
+    }
+
+    function jump() {
+      if (!player.jumping) {
+        player.vy = -20;
+        player.jumping = true;
+      }
+    }
+
+    function endGame() {
+      gameOver = true;
+      gameOverScreen.style.display = "flex";
+    }
+
+    function restartGame() {
+      reset();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (["ArrowUp", "KeyW", "Space"].includes(e.code)) {
+        jump();
+      }
+    });
+
+    canvas.addEventListener("click", jump);
+
+    resizeCanvas();
+    reset();
+  </script>
+</body>
+</html>
