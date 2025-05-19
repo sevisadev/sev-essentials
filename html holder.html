@@ -221,7 +221,7 @@ function openMain() {
           "Games": [
             { name: "Snake Game", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/snake.html" },
             { name: "Tetris", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/tetris.html" },
-            { name: "Pong", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/Pong.html" },
+            { name: "Pong (To Player)", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/Pong.html" },
           ],
           "More": [
           ],
@@ -258,7 +258,6 @@ function openMain() {
             .catch(err => alert("Failed to load HTML: " + err));
         }
 
-        // Load default tab
         switchTab("Games", document.querySelector(".nav-button.active"));
       <\/script>
     </body>
