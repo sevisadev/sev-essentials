@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sev's Minesweeper</title>
+  <style>
+    body {
+      background-color: #4b097b;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #8a2be2;
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(10, 30px);
+      grid-template-rows: repeat(10, 30px);
+      gap: 2px;
+      margin-bottom: 20px;
+    }
+
+    .cell {
+      width: 30px;
+      height: 30px;
+      background-color: #6a0dad;
+      border: 1px solid #8a2be2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .cell.opened {
+      background-color: #8a2be2;
+    }
+
+    .cell.mine {
+      background-color: red;
+    }
+
+    .btn {
+      background-color: #6a0dad;
+      color: #ffffff;
+      border: none;
+      padding: 15px 25px;
+      margin: 10px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #8a2be2;
+    }
+
+    .popup {
+      display: none;
+      background-color: #8a2be2;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      font-size: 1.5em;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .popup button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .popup button:hover {
+      background-color: #8a2be2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sev's Minesweeper</h1>
+  <div id="board"></div>
+  <button class="btn" id="restartButton">Restart Game</button>
+
+  <div class="popup" id="popup">
+    <p id="popupMessage"></p>
+    <button onclick="closePopup()">Close</button>
+  </div>
+
+  <script>
+    const rows = 10;
+    const cols = 10;
+    const mineCount = 15;
+    let board = [];
+    let gameOver = false;
+
+    function createBoard() {
+      board = [];
+      const gameBoard = document.getElementById("board");
+      gameBoard.innerHTML = '';
+
+      for (let row = 0; row < rows; row++) {
+        board[row] = [];
+        for (let col = 0; col < cols; col++) {
+          board[row][col] = { mine: false, opened: false, adjacentMines: 0 };
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.dataset.row = row;
+          cell.dataset.col = col;
+          cell.addEventListener('click', handleCellClick);
+          gameBoard.appendChild(cell);
+        }
+      }
+
+
+      let minesPlaced = 0;
+      while (minesPlaced < mineCount) {
+        const row = Math.floor(Math.random() * rows);
+        const col = Math.floor(Math.random() * cols);
+        if (!board[row][col].mine) {
+          board[row][col].mine = true;
+          minesPlaced++;
+        }
+      }
+
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          if (board[row][col].mine) continue;
+          let adjacentMines = 0;
+          for (let r = -1; r <= 1; r++) {
+            for (let c = -1; c <= 1; c++) {
+              const nr = row + r;
+              const nc = col + c;
+              if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].mine) {
+                adjacentMines++;
+              }
+            }
+          }
+          board[row][col].adjacentMines = adjacentMines;
+        }
+      }
+    }
+
+
+    function handleCellClick(event) {
+      if (gameOver) return;
+
+      const row = event.target.dataset.row;
+      const col = event.target.dataset.col;
+      const cell = board[row][col];
+
+      if (cell.opened) return;
+
+      cell.opened = true;
+      const domCell = event.target;
+      domCell.classList.add('opened');
+
+      if (cell.mine) {
+        domCell.classList.add('mine');
+        showPopup('Game Over! You hit a mine!');
+        gameOver = true;
+        revealAllMines();
+      } else {
+        domCell.textContent = cell.adjacentMines > 0 ? cell.adjacentMines : '';
+        if (cell.adjacentMines === 0) {
+          openAdjacentCells(row, col);
+        }
+      }
+
+      checkWin();
+    }
+
+
+    function openAdjacentCells(row, col) {
+      for (let r = -1; r <= 1; r++) {
+        for (let c = -1; c <= 1; c++) {
+          const nr = row + r;
+          const nc = col + c;
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !board[nr][nc].opened) {
+            const cell = board[nr][nc];
+            const domCell = document.querySelector(`[data-row="${nr}"][data-col="${nc}"]`);
+
+            if (domCell && !cell.opened) {
+              cell.opened = true;
+              domCell.classList.add('opened');
+              domCell.textContent = cell.adjacentMines > 0 ? cell.adjacentMines : '';
+              if (cell.adjacentMines === 0) {
+                openAdjacentCells(nr, nc);
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    function revealAllMines() {
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach(cell => {
+        const row = cell.dataset.row;
+        const col = cell.dataset.col;
+        if (board[row][col].mine) {
+          cell.classList.add('mine');
+        }
+      });
+    }
+
+
+    function checkWin() {
+      let openedCells = 0;
+      let totalCells = rows * cols;
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          if (board[row][col].opened) {
+            openedCells++;
+          }
+        }
+      }
+
+      if (openedCells === totalCells - mineCount) {
+        showPopup('Congratulations! You Win!');
+        gameOver = true;
+      }
+    }
+
+    function showPopup(message) {
+      const popup = document.getElementById('popup');
+      const popupMessage = document.getElementById('popupMessage');
+      popupMessage.textContent = message;
+      popup.style.display = 'block';
+    }
+
+
+    function closePopup() {
+      const popup = document.getElementById('popup');
+      popup.style.display = 'none';
+      if (gameOver) {
+        setTimeout(() => {
+          createBoard();
+          gameOver = false;
+        }, 2000);
+      }
+    }
+
+
+    document.getElementById("restartButton").addEventListener('click', () => {
+      createBoard();
+      gameOver = false;
+      const popup = document.getElementById('popup');
+      popup.style.display = 'none';
+    });
+
+    createBoard();
+  </script>
+</body>
+</html>
