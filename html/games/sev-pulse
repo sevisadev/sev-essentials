@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sev Pulse</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #4b097b;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: #000;
+    }
+
+    #score {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2em;
+      color: #ffffff;
+      z-index: 2;
+    }
+
+    #gameOverScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .modalBox {
+      background-color: #6a0dad;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 30px #000;
+    }
+
+    #gameOverText {
+      font-size: 2.5em;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    #restart {
+      font-size: 1.5em;
+      background: #8a2be2;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #restart:hover {
+      background: #ffffff;
+      color: #6a0dad;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Score: 0</div>
+
+  <!-- Game Over Modal -->
+  <div id="gameOverScreen">
+    <div class="modalBox">
+      <div id="gameOverText">GAME OVER</div>
+      <button id="restart" onclick="restartGame()">Restart</button>
+    </div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('score');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+
+    let centerX, centerY, targetRadius, pulseRadius, pulseSpeed, score, isGameOver;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      centerX = canvas.width / 2;
+      centerY = canvas.height / 2;
+      targetRadius = Math.min(canvas.width, canvas.height) / 12;
+      if (!isGameOver) {
+        pulseRadius = Math.min(canvas.width, canvas.height) / 2;
+      }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, targetRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#8a2be2';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, pulseRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+
+      if (!isGameOver) {
+        pulseRadius -= pulseSpeed;
+        if (pulseRadius < targetRadius - 20) endGame();
+        requestAnimationFrame(draw);
+      }
+    }
+
+    function checkHit() {
+      const diff = Math.abs(pulseRadius - targetRadius);
+      if (diff < targetRadius * 0.35) {
+        score++;
+        pulseRadius = Math.min(canvas.width, canvas.height) / 2;
+        pulseSpeed += 0.2;
+        scoreDisplay.textContent = `Score: ${score}`;
+      } else {
+        endGame();
+      }
+    }
+
+    function endGame() {
+      isGameOver = true;
+      gameOverScreen.style.display = 'flex';
+    }
+
+    function restartGame() {
+      isGameOver = false;
+      score = 0;
+      pulseSpeed = 2;
+      pulseRadius = Math.min(canvas.width, canvas.height) / 2;
+      scoreDisplay.textContent = 'Score: 0';
+      gameOverScreen.style.display = 'none';
+      draw();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && !isGameOver) checkHit();
+    });
+
+    canvas.addEventListener('click', () => {
+      if (!isGameOver) checkHit();
+    });
+
+    resizeCanvas();
+    restartGame();
+  </script>
+</body>
+</html>
