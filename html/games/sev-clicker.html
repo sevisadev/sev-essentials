@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sev Clicker</title>
+  <style>
+    body {
+      background-color: #4b097b;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #8a2be2;
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    #aetherDisplay {
+      font-size: 2em;
+      margin: 15px;
+    }
+
+    .btn {
+      background-color: #6a0dad;
+      color: #ffffff;
+      border: none;
+      padding: 15px 25px;
+      margin: 10px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #8a2be2;
+    }
+
+    .upgrade {
+      margin: 10px;
+      border: 2px solid #8a2be2;
+      padding: 10px;
+      border-radius: 8px;
+      width: 300px;
+      background-color: #6a0dad33;
+    }
+
+    .stats {
+      margin-top: 20px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sev Clicker</h1>
+  <div id="aetherDisplay">Aether: 0</div>
+  <button class="btn" onclick="clickAether()">Gather Aether</button>
+
+  <div class="upgrade">
+    <p>Upgrade Click Power (+1)</p>
+    <button class="btn" onclick="buyClickPower()">Buy (10 Aether)</button>
+  </div>
+
+  <div class="upgrade">
+    <p>Auto Collector (+1 Aether/sec)</p>
+    <button class="btn" onclick="buyAutoClicker()">Buy (100 Aether)</button>
+  </div>
+
+  <div class="upgrade">
+    <p>Prestige: Reset for 2x gains</p>
+    <button class="btn" onclick="prestige()">Prestige (1000 Aether)</button>
+  </div>
+
+  <div class="stats" id="stats">
+    <p>Click Power: 1</p>
+    <p>Auto Collectors: 0</p>
+    <p>Prestige Multiplier: 1x</p>
+  </div>
+
+  <script>
+    let aether = 0;
+    let clickPower = 1;
+    let autoClickers = 0;
+    let prestigeMultiplier = 1;
+
+    function updateDisplay() {
+      document.getElementById("aetherDisplay").innerText = "Aether: " + Math.floor(aether);
+      document.getElementById("stats").innerHTML = `
+        <p>Click Power: ${clickPower}</p>
+        <p>Auto Collectors: ${autoClickers}</p>
+        <p>Prestige Multiplier: ${prestigeMultiplier}x</p>
+      `;
+    }
+
+    function clickAether() {
+      aether += clickPower * prestigeMultiplier;
+      updateDisplay();
+    }
+
+    function buyClickPower() {
+      if (aether >= 10) {
+        aether -= 10;
+        clickPower += 1;
+        updateDisplay();
+      }
+    }
+
+    function buyAutoClicker() {
+      if (aether >= 100) {
+        aether -= 100;
+        autoClickers += 1;
+        updateDisplay();
+      }
+    }
+
+    function prestige() {
+      if (aether >= 1000) {
+        aether = 0;
+        clickPower = 1;
+        autoClickers = 0;
+        prestigeMultiplier *= 2;
+        updateDisplay();
+      }
+    }
+
+    setInterval(() => {
+      aether += autoClickers * prestigeMultiplier;
+      updateDisplay();
+    }, 1000);
+
+    updateDisplay();
+  </script>
+</body>
+</html>
