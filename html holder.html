@@ -162,6 +162,19 @@ function openMain() {
           color: #b9b9b9;
         }
 
+        .title-container {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #dddddd;
+  font-style: italic;
+}
+
       </style>
     </head>
     <body>
@@ -176,7 +189,11 @@ function openMain() {
       </div>
 
       <div class="main-content" id="mainContent">
-        <h1 class="title" id="tabTitle">Games</h1>
+        <div class="title-container">
+  <h1 class="title" id="tabTitle">Games</h1>
+  <span class="subtitle" id="tabSubtitle"></span>
+</div>
+
         <div id="linkList"></div>
       </div>
 
@@ -228,32 +245,60 @@ function openMain() {
             { name: "Pong (Two Player)", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/Pong.html" },
             { name: "Block Dude", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/block-dude.html" },
             { name: "Sev Clicker", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-clicker.html" },
+            { name: "Sev Pulse", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-pulse.html" },
+            { name: "Sev Dash", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-dash.html" },
+            { name: "Sev's Minesweeper", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sevs-minesweeper.html" },
+          ],
+          "Bookmarklets": [
+            { name: "hi", url: "javascript:alert('Hello, Sev!');" },
           ],
           "More": [
             { name: "Ext Printer", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/ext-printer.html" },
             { name: "HTML Runner", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/htmlr.html" },
+            { name: "Bookmarklet Maker", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/bookmarklet.html" },
           ],
           "Partners": [
           ]
         };
 
-        function switchTab(tabName, btn) {
-          document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
+function switchTab(tabName, btn) {
+  document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 
-          document.getElementById('tabTitle').innerText = tabName;
+  document.getElementById('tabTitle').innerText = tabName;
 
-          const listContainer = document.getElementById('linkList');
-          listContainer.innerHTML = '';
+  const subtitle = document.getElementById('tabSubtitle');
+  subtitle.innerText = (tabName === "Games") ? "   You may have to click on some games when they are opened for them to work" : "";
+  subtitle.innerText = (tabName === "Bookmarklets") ? "   Drag the bookmarklet you want into your bookmarks bar" : "";
 
-          (tabLinks[tabName] || []).forEach(link => {
-            const button = document.createElement('button');
-            button.className = 'github-btn';
-            button.innerText = link.name;
-            button.onclick = () => openGitHubHTML(link.url);
-            listContainer.appendChild(button);
-          });
-        }
+  const listContainer = document.getElementById('linkList');
+  listContainer.innerHTML = '';
+
+  (tabLinks[tabName] || []).forEach(link => {
+    if (tabName === "Bookmarklets") {
+      const linkElement = document.createElement('a');
+      linkElement.className = 'github-btn';
+      linkElement.innerText = link.name;
+      linkElement.href = link.url;
+      linkElement.target = '_blank';
+      linkElement.onclick = (event) => {
+        event.preventDefault();
+      };
+      linkElement.draggable = true;
+      linkElement.addEventListener('dragstart', (event) => {
+        event.dataTransfer.setData('text/plain', link.url);
+      });
+      listContainer.appendChild(linkElement);
+    } else {
+      const button = document.createElement('button');
+      button.className = 'github-btn';
+      button.innerText = link.name;
+      button.onclick = () => openGitHubHTML(link.url);
+      listContainer.appendChild(button);
+    }
+  });
+}
+
 
         function openGitHubHTML(url) {
           fetch(url)
