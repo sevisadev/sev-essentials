@@ -186,10 +186,10 @@ function openMain() {
         const spheres = [];
         for (let i = 0; i < 50; i++) {
           spheres.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            radius: Math.random() * 5 + 2,
-            speed: Math.random() * 2 + 0.5
+            x: Math.random() * (width - 220) + 220,
+    y: Math.random() * (height - 50),
+    radius: Math.random() * 5 + 2,
+    speed: Math.random() * 2 + 0.5
           });
         }
 
