@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sev Essentials</title>
+  <style>
+    body {
+      font-family: "Times New Roman", serif;
+      background-color: #000000;
+      padding: 20px;
+      color: #800080;
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Sev Essentials</h2>
+
+<button onclick="openMain()" style="
+  font-size: 20px;
+  padding: 12px 24px;
+  background-color: #cccccc;
+  color: #800080;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Times New Roman', serif;
+">
+  Open
+</button>
+
+
+<script>
+function openMain() {
+  const newWindow = window.open('about:blank', '_blank');
+
+  newWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Sev Essentials</title>
+      <style>
+        body {
+          font-family: "Times New Roman", serif;
+          background-color: #000000;
+          padding: 20px;
+          color: #800080;
+          margin: 0;
+          overflow: hidden;
+        }
+        canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1;
+        }
+      </style>
+    </head>
+    <body>
+      <canvas id="bgCanvas"></canvas>
+
+      <h1>Sev Essentials</h1>
+      <button onclick="openGames()" style="
+  font-size: 20px;
+  padding: 12px 24px;
+  background-color: #cccccc;
+  color: #800080;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Times New Roman', serif;
+">
+  Games
+</button>
+
+      <script>
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const spheres = [];
+
+        for (let i = 0; i < 50; i++) {
+          spheres.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 5 + 2,
+            speed: Math.random() * 2 + 0.5
+          });
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, width, height);
+          ctx.fillStyle = 'rgba(200, 200, 200, 0.6)';
+          spheres.forEach(sphere => {
+            ctx.beginPath();
+            ctx.arc(sphere.x, sphere.y, sphere.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            sphere.y += sphere.speed;
+            if (sphere.y > height) {
+              sphere.y = -sphere.radius;
+              sphere.x = Math.random() * width;
+            }
+          });
+          requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        });
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  newWindow.document.close();
+}
+</script>
+
+</body>
+</html>
+
+
