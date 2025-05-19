@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookmarklet Maker</title>
+  <style>
+    body {
+      background-color: #4b097b;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+
+    textarea {
+      width: 80%;
+      height: 150px;
+      border-radius: 10px;
+      border: none;
+      padding: 15px;
+      font-size: 1em;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 25px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #8a2be2;
+    }
+
+    #output {
+      margin-top: 20px;
+    }
+
+    a#bookmarklet {
+      display: inline-block;
+      margin-top: 10px;
+      background-color: #8a2be2;
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+    }
+
+    a#bookmarklet:hover {
+      background-color: #a95ffb;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sev's Bookmarklet Maker</h1>
+  <p>Paste your JavaScript below:</p>
+  <textarea id="code" placeholder="alert('Hello, world!');"></textarea><br>
+  <button onclick="generate()">Generate Bookmarklet</button>
+
+  <div id="output"></div>
+
+  <script>
+    function generate() {
+      const js = document.getElementById('code').value.trim();
+      if (!js) {
+        alert("Please enter some JavaScript code.");
+        return;
+      }
+
+      // Encode and wrap the code into a bookmarklet format
+      const bookmarklet = "javascript:" + encodeURIComponent(js);
+      const outputDiv = document.getElementById('output');
+
+      outputDiv.innerHTML = `
+        <p>Bookmarklet:</p>
+        <a id="bookmarklet" href="${bookmarklet}" draggable="true">🔖 Drag Me to Bookmarks</a>
+        <p style="margin-top:10px;">Or right-click and copy link</p>
+      `;
+    }
+  </script>
+</body>
+</html>
