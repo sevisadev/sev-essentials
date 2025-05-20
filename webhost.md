@@ -1,5 +1,5 @@
 # Webhosts
-## Webhosts can be used to open Sev Essentials with very low effort
+Webhosts can be used to open Sev Essentials with very low effort
 ## Officail
 [google sites sev essentials](https://sites.google.com/lsr7.net/sevessentialshost/home)
 ## Un-Officail
