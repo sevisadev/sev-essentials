@@ -182,6 +182,7 @@ function openMain() {
 
       <div class="sidebar" id="sidebar">
         <h1>Sev Essentials</h1>
+        <button class="nav-button active" onclick="switchTab('Tools', this)">Tools</button>
         <button class="nav-button active" onclick="switchTab('Games', this)">Games</button>
         <button class="nav-button" onclick="switchTab('More', this)">More</button>
         <button class="nav-button" onclick="switchTab('Partners', this)">Partners</button>
@@ -239,6 +240,10 @@ function openMain() {
         });
 
         const tabLinks = {
+          "Tools": [
+            { name: "HTML Runner", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/htmlr.html" },
+            { name: "Bookmarklet Maker", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/bookmarklet.html" },
+          ],
           "Games": [
             { name: "Snake Game", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/snake.html" },
             { name: "Tetris", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/tetris.html" },
@@ -254,8 +259,6 @@ function openMain() {
           ],
           "More": [
             { name: "Ext Printer", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/ext-printer.html" },
-            { name: "HTML Runner", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/htmlr.html" },
-            { name: "Bookmarklet Maker", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/bookmarklet.html" },
           ],
           "Partners": [
           ]
@@ -311,7 +314,7 @@ function switchTab(tabName, btn) {
             .catch(err => alert("Failed to load HTML: " + err));
         }
 
-        switchTab("Games", document.querySelector(".nav-button.active"));
+        switchTab("Tools", document.querySelector(".nav-button.active"));
       <\/script>
     </body>
     </html>
