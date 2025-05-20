@@ -1,8 +1,8 @@
 # Webhosts
 Webhosts can be used to open Sev Essentials with very low effort
-## Officail
+## Official
 [google sites sev essentials](https://sites.google.com/lsr7.net/sevessentialshost/home)
-## Un-Officail
+## Un-Official
 
 # Make your own host
 Copy the below and paste it into a iframe, this will auto update.
