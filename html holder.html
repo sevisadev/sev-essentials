@@ -102,7 +102,7 @@
 
                 
 .sidebar-launch-container {
-  margin-top: auto; /* Pushes the Reload button container to the bottom */
+  margin-top: auto;
   padding: 10px;
   text-align: center;
 }
@@ -222,13 +222,23 @@
 
         function reloadself() {
   fetch('https://raw.githubusercontent.com/sevisadev/sev-essentials/main/html%20holder.html')
-    .then(res => res.text())
-    .then(html => {
-      document.open();
-      document.write(html);
-      document.close();
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.text();
     })
-    .catch(err => alert("Failed to load HTML: " + err));
+    .then(html => {
+      const newWindow = window.open('about:blank', '_blank');
+      if (newWindow) {
+        newWindow.document.write(html);
+        newWindow.document.close();
+        window.close();
+      } else {
+        alert("Pop-up blocked. Please allow pop-ups for this site.");
+      }
+    })
+    .catch(error => {
+      alert("Failed to load HTML: " + error.message);
+    });
 }
 
 
