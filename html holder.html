@@ -51,6 +51,7 @@ function openMain() {
     <head>
       <title>Sev Essentials</title>
       <style>
+
         body {
           font-family: "Times New Roman", serif;
           background-color: #4b097b;
@@ -147,17 +148,42 @@ function openMain() {
           background-color: #6a0dad;
         }
 
+                
+.sidebar-launch-container {
+  margin-top: auto; /* Pushes the Reload button container to the bottom */
+  padding: 10px;
+  text-align: center;
+}
+
+
+
+.rounded-launch-button {
+  padding: 10px 20px;
+  background-color: #8a2be2;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: 'Times New Roman', serif;
+  font-size: 16px;
+  width: 90%;
+}
+
+.rounded-launch-button:hover {
+  background-color: #6a0dad;
+}
+
         .sidebar-footer {
-          margin-top: auto;
-          padding: 15px 10px;
-          text-align: center;
-          font-size: 14px;
-          color: #ffffff;
-          text-decoration: underline;
-          cursor: pointer;
-          background-color: #8a2be2;
-          display: block;
-        }
+  padding: 15px 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+  background-color: #8a2be2;
+  display: block;
+}
+
         .sidebar-footer:hover {
           color: #b9b9b9;
         }
@@ -185,7 +211,10 @@ function openMain() {
         <button class="nav-button active" onclick="switchTab('Tools', this)">Tools</button>
         <button class="nav-button active" onclick="switchTab('Games', this)">Games</button>
         <button class="nav-button" onclick="switchTab('More', this)">More</button>
-        <button class="nav-button" onclick="switchTab('Partners', this)">Partners</button>
+        <div class="sidebar-launch-container">
+  <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
+</div>
+
         <a href="https://github.com/sevisadev/" target="_blank" class="sidebar-footer">Made By Sevvy Wevvy</a>
       </div>
 
@@ -238,6 +267,19 @@ function openMain() {
           width = canvas.width = window.innerWidth;
           height = canvas.height = window.innerHeight;
         });
+
+        function reloadself() {
+  fetch('https://raw.githubusercontent.com/sevisadev/sev-essentials/main/html%20holder.html')
+    .then(res => res.text())
+    .then(html => {
+      document.open();
+      document.write(html);
+      document.close();
+    })
+    .catch(err => alert("Failed to load HTML: " + err));
+}
+
+
 
         const tabLinks = {
           "Tools": [
@@ -321,6 +363,8 @@ function switchTab(tabName, btn) {
   `);
 
   newWindow.document.close();
+
+  window.close();
 }
 
 </script>
