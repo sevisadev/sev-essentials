@@ -1,6 +1,6 @@
 # Sev Essentials
 ## Description
-A school game website that has more to offer than games.
+A html based site with tools, games, proxys, and more.
 ## How to use
 **Easy:** You can use [webhost](https://github.com/sevisadev/sev-essentials/blob/main/webhost.md) if not unavalible, webhosts are much easier to use.
 
