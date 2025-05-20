@@ -161,7 +161,7 @@
       <div class="sidebar" id="sidebar">
         <h1>Sev Essentials</h1>
         <button class="nav-button active" onclick="switchTab('Tools', this)">Tools</button>
-        <button class="nav-button active" onclick="switchTab('Games', this)">Games</button>
+        <button class="nav-button" onclick="switchTab('Games', this)">Games</button>
         <button class="nav-button" onclick="switchTab('More', this)">More</button>
         <div class="sidebar-launch-container">
   <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
@@ -308,7 +308,7 @@ function switchTab(tabName, btn) {
             .catch(err => alert("Failed to load HTML: " + err));
         }
 
-        switchTab("Tools", document.querySelector(".nav-button.active"));
-      <\/script>
+        switchTab("Tools", document.querySelector('.nav-button:nth-of-type(1)'));
+      </script>
     </body>
     </html>
