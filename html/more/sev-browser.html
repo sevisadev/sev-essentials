@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sev Browser</title>
+  <style>
+    body {
+      background-color: #4b097b;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #8a2be2;
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 90%;
+      max-width: 600px;
+      height: 150px;
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      resize: vertical;
+      background-color: #6a0dad33;
+      color: #ffffff;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      background-color: #6a0dad;
+      color: #ffffff;
+      border: none;
+      padding: 15px 25px;
+      margin: 10px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #8a2be2;
+    }
+
+    #output {
+      margin-top: 20px;
+      background-color: #6a0dad33;
+      padding: 15px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      font-size: 1.1em;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sev Browser</h1>
+
+  <textarea id="inputurl" placeholder="Enter url"></textarea>
+
+  <div>
+    <button class="btn" onclick="openUrl()">Open URL</button>
+  </div>
+
+  <script>
+    function openUrl() {
+      const input = document.getElementById("inputurl").value;
+      // Validating URL format
+      try {
+        new URL(input); // This ensures the input is a valid URL
+      } catch (e) {
+        alert("Invalid URL");
+        return;
+      }
+      
+      const newWindow = window.open('about:blank', '_blank');
+      if (newWindow) {
+        newWindow.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <title>W3 Burger Awesome</title>
+    <link rel="icon" href="https://images.emojiterra.com/twitter/v14.0/128px/1f354.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        embed {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <embed src="${input}">
+</body>
+</html>`);
+        newWindow.document.close();
+      }
+    }
+  </script>
+</body>
+</html>
