@@ -128,33 +128,20 @@
       
       const newWindow = window.open('about:blank', '_blank');
       if (newWindow) {
-        newWindow.document.write(`<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-    <title>W3 Burger Awesome</title>
-    <link rel="icon" href="https://images.emojiterra.com/twitter/v14.0/128px/1f354.png">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-        }
-        embed {
-            width: 100vw;
-            height: 100vh;
-            border: none;
-            display: block;
-        }
-    </style>
-</head>
+        newWindow.document.write(`<style>
+body {
+font-family: "Times New Roman", serif;
+background-color: #4b097b;
+margin: 0;
+overflow: hidden;
+color: #ffffff;
+}
+</style>
 <body>
-    <embed src="${input}">
-</body>
-</html>`);
+<div>
+<embed src=${input} width="100%" height="100%">
+</div>
+</body>`);
         newWindow.document.close();
       }
     }
