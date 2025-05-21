@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sev Encoder</title>
+  <style>
+    body {
+      background-color: #4b097b;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #8a2be2;
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 90%;
+      max-width: 600px;
+      height: 150px;
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      resize: vertical;
+      background-color: #6a0dad33;
+      color: #ffffff;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      background-color: #6a0dad;
+      color: #ffffff;
+      border: none;
+      padding: 15px 25px;
+      margin: 10px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #8a2be2;
+    }
+
+    #output {
+      margin-top: 20px;
+      background-color: #6a0dad33;
+      padding: 15px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      font-size: 1.1em;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sev Encoder</h1>
+
+  <textarea id="inputText" placeholder="Enter text to encode or decode..."></textarea>
+
+  <div>
+    <button class="btn" onclick="encodeText()">Encode</button>
+    <button class="btn" onclick="decodeText()">Decode</button>
+  </div>
+
+  <div id="output">Output will appear here...</div>
+
+  <script>
+    function encodeText() {
+      const input = document.getElementById("inputText").value;
+      try {
+        const encoded = btoa(unescape(encodeURIComponent(input)));
+        document.getElementById("output").innerText = encoded;
+      } catch (e) {
+        document.getElementById("output").innerText = "Encoding failed: Invalid characters.";
+      }
+    }
+
+    function decodeText() {
+      const input = document.getElementById("inputText").value;
+      try {
+        const decoded = decodeURIComponent(escape(atob(input)));
+        document.getElementById("output").innerText = decoded;
+      } catch (e) {
+        document.getElementById("output").innerText = "Decoding failed: Invalid Base64 string.";
+      }
+    }
+  </script>
+</body>
+</html>
