@@ -162,6 +162,7 @@
         <h1>Sev Essentials</h1>
         <button class="nav-button active" onclick="switchTab('Tools', this)">Tools</button>
         <button class="nav-button" onclick="switchTab('Games', this)">Games</button>
+        <button class="nav-button" onclick="switchTab('Proxies', this)">Proxies</button>
         <button class="nav-button" onclick="switchTab('More', this)">More</button>
         <div class="sidebar-launch-container">
   <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
@@ -273,7 +274,8 @@
             { name: "Fireworks", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/fireworks.html" },
             { name: "Sev Cursor Playground", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/cursorplayground.html" },
           ],
-          "Partners": [
+          "Proxies": [
+            { name: "Burger", url: "https://burgerawesome.neocities.org" },
           ]
         };
 
@@ -305,6 +307,12 @@ function switchTab(tabName, btn) {
         event.dataTransfer.setData('text/plain', link.url);
       });
       listContainer.appendChild(linkElement);
+    } else if (tabName === "Proxies") {
+      const button = document.createElement('button');
+      button.className = 'github-btn';
+      button.innerText = link.name;
+      button.onclick = () => proxie(link.url);
+      listContainer.appendChild(button);
     } else {
       const button = document.createElement('button');
       button.className = 'github-btn';
@@ -313,6 +321,39 @@ function switchTab(tabName, btn) {
       listContainer.appendChild(button);
     }
   });
+}
+function proxie(link) {
+            const newWindow = window.open('about:blank', '_blank');
+              if (newWindow) {
+            newWindow.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <title>W3 Burger Awesome</title>
+        <link rel="icon" href="https://images.emojiterra.com/twitter/v14.0/128px/1f354.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        embed {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <embed src=url>
+</body>
+</html>`);
+            newWindow.document.close();
+              }
 }
 
 
