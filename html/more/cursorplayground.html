@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sev Cursor Playground</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #4b097b;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #8a2be2;
+      font-size: 6vw;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .preview {
+      width: 100%;
+      max-width: 600px;
+      height: 40vw;
+      max-height: 300px;
+      margin-bottom: 40px;
+      border: 3px dashed #8a2be2;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #6a0dad33;
+      font-size: 3vw;
+      text-align: center;
+    }
+
+    .cursor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 30px;
+    }
+
+    .cursor-btn {
+      padding: 10px;
+      border-radius: 8px;
+      background: #6a0dad;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background 0.2s ease;
+      word-break: break-word;
+    }
+
+    .cursor-btn:hover {
+      background: #8a2be2;
+    }
+
+    .copy-btn {
+      background-color: #8a2be2;
+      padding: 12px 20px;
+      font-size: 1em;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 9vw;
+      }
+      .preview {
+        height: 50vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sev Cursor Playground</h1>
+    <div class="preview" id="previewBox">Hover here to test cursor</div>
+
+    <div class="cursor-grid" id="cursorList"></div>
+
+    <button class="cursor-btn copy-btn" onclick="copyCss()">Copy CSS Snippet</button>
+  </div>
+
+  <script>
+    const cursors = [
+      'default', 'pointer', 'crosshair', 'move', 'text', 'wait',
+      'help', 'not-allowed', 'zoom-in', 'zoom-out', 'grab', 'grabbing',
+      'progress', 'cell', 'alias', 'copy', 'context-menu', 'no-drop',
+      'col-resize', 'row-resize', 'e-resize', 'n-resize', 's-resize',
+      'w-resize', 'ne-resize', 'nw-resize', 'se-resize', 'sw-resize'
+    ];
+
+    const previewBox = document.getElementById('previewBox');
+    const cursorList = document.getElementById('cursorList');
+    let currentCursor = 'default';
+
+    cursors.forEach(cursor => {
+      const btn = document.createElement('button');
+      btn.className = 'cursor-btn';
+      btn.innerText = cursor;
+      btn.onclick = () => {
+        previewBox.style.cursor = cursor;
+        currentCursor = cursor;
+      };
+      cursorList.appendChild(btn);
+    });
+
+    function copyCss() {
+      const css = `cursor: ${currentCursor};`;
+      navigator.clipboard.writeText(css).then(() => {
+        alert('CSS snippet copied: ' + css);
+      });
+    }
+  </script>
+</body>
+</html>
