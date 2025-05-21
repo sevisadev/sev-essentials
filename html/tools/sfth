@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sev File2HTML</title>
+  <style>
+    body {
+      background-color: #4b097b;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #8a2be2;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .drop-zone {
+      border: 3px dashed #8a2be2;
+      border-radius: 15px;
+      padding: 40px;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      margin-bottom: 30px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .drop-zone:hover {
+      background-color: #6a0dad33;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    button {
+      background-color: #6a0dad;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    button.copied {
+      background-color: #00c853 !important;
+      color: #000 !important;
+    }
+
+    button:hover:not(.copied) {
+      background-color: #8a2be2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sev File2HTML</h1>
+
+  <div class="drop-zone" id="dropZone" onclick="fileInput.click()">Click or drag & drop a file here</div>
+  <input type="file" id="fileInput" />
+
+  <button onclick="copyCode()" id="copyBtn" disabled>Copy</button>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const copyBtn = document.getElementById('copyBtn');
+    let currentHtml = '';
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#fff';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.borderColor = '#8a2be2';
+    });
+
+    dropZone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#8a2be2';
+      const file = e.dataTransfer.files[0];
+      if (file) await handleFile(file);
+    });
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files[0];
+      if (file) await handleFile(file);
+    });
+
+    async function handleFile(file) {
+      const base64 = await toBase64(file);
+      currentHtml = `<a download="${file.name}" href="data:${file.type};base64,${base64}">${file.name}</a>`;
+      copyBtn.disabled = false;
+    }
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+      });
+    }
+
+    function copyCode() {
+      if (!currentHtml) return;
+      const temp = document.createElement("textarea");
+      temp.value = currentHtml;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand("copy");
+      document.body.removeChild(temp);
+
+      copyBtn.textContent = "Copied!";
+      copyBtn.classList.add("copied");
+      copyBtn.disabled = true;
+
+      setTimeout(() => {
+        copyBtn.textContent = "Copy";
+        copyBtn.classList.remove("copied");
+        copyBtn.disabled = false;
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
