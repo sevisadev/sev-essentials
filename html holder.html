@@ -325,7 +325,7 @@ function switchTab(tabName, btn) {
       button.innerText = link.name;
       button.onclick = () => proxie(link.prox);
       listContainer.appendChild(button);
-      } if (link.url === "link") {
+      } else if (link.url === "link") {
       const button = document.createElement('button');
       button.className = 'github-btn';
       button.innerText = link.name;
