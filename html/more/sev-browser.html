@@ -46,8 +46,31 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
+    
     .btn:hover {
+      background-color: #8a2be2;
+    }
+
+    select {
+      width: 90%;
+      max-width: 600px;
+      padding: 10px;
+      font-size: 1em;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: none;
+      background-color: #6a0dad;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    select option {
+      background-color: #6a0dad;
+      color: #ffffff;
+    }
+
+    select:hover {
       background-color: #8a2be2;
     }
 
@@ -66,18 +89,31 @@
 <body>
   <h1>Sev Browser</h1>
 
-  <textarea id="inputurl" placeholder="Enter url"></textarea>
+  <textarea id="inputurl" placeholder="Enter URL"></textarea>
+  
+  <select id="presetUrls" onchange="populateInput()">
+    <option value="">Select a preset website...</option>
+    <option value="https://burgerawesome.neocities.org">Burger Awsome</option>
+    <option value="https://teachers-are-the-best.neocities.org">Butter Dog</option>
+  </select>
 
   <div>
     <button class="btn" onclick="openUrl()">Open URL</button>
   </div>
 
   <script>
+    function populateInput() {
+      const presetSelect = document.getElementById("presetUrls");
+      const inputField = document.getElementById("inputurl");
+
+      inputField.value = presetSelect.value; 
+      presetSelect.selectedIndex = 0;
+    }
+
     function openUrl() {
       const input = document.getElementById("inputurl").value;
-      // Validating URL format
       try {
-        new URL(input); // This ensures the input is a valid URL
+        new URL(input);
       } catch (e) {
         alert("Invalid URL");
         return;
