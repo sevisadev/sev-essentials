@@ -280,7 +280,7 @@
             { name: "Sev Browser", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/sev-browser.html" },
             { name: "Fireworks", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/fireworks.html" },
             { name: "Sev Cursor Playground", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/cursorplayground.html" },
-            { name: "Github", url: "prox", prox: "https://github.com/sevisadev/sev-essentials/tree/main" },
+            { name: "Github", url: "link", prox: "https://github.com/sevisadev/sev-essentials/tree/main" },
           ],
         };
 
@@ -324,6 +324,12 @@ function switchTab(tabName, btn) {
       button.className = 'github-btn';
       button.innerText = link.name;
       button.onclick = () => proxie(link.prox);
+      listContainer.appendChild(button);
+      } if (link.url === "link") {
+      const button = document.createElement('button');
+      button.className = 'github-btn';
+      button.innerText = link.name;
+      button.onclick = () => {window.open(link.prox, '_blank');};
       listContainer.appendChild(button);
       } else {
       const button = document.createElement('button');
