@@ -68,9 +68,11 @@
             document.body.innerHTML = "";
             document.body.appendChild(iframe);
             const iframeDoc = iframe.contentWindow.document;
-            iframeDoc.open();
-            iframeDoc.write(code);
-            iframeDoc.close();
+            const newWindow = window.open('about:blank', '_blank');
+              if (newWindow) {
+            newWindow.document.write(code);
+            newWindow.document.close();
+
         }
     </script>
 </body>
