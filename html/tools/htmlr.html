@@ -59,15 +59,6 @@
     <script>
         function runCode() {
             const code = document.getElementById("code-box").value;
-            const iframe = document.createElement("iframe");
-            iframe.style.position = "absolute";
-            iframe.style.top = "0";
-            iframe.style.left = "0";
-            iframe.style.width = "100%";
-            iframe.style.height = "100vh";
-            document.body.innerHTML = "";
-            document.body.appendChild(iframe);
-            const iframeDoc = iframe.contentWindow.document;
             const newWindow = window.open('about:blank', '_blank');
               if (newWindow) {
             newWindow.document.write(code);
