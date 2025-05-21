@@ -162,7 +162,6 @@
         <h1>Sev Essentials</h1>
         <button class="nav-button active" onclick="switchTab('Tools', this)">Tools</button>
         <button class="nav-button" onclick="switchTab('Games', this)">Games</button>
-        <button class="nav-button" onclick="switchTab('Proxies', this)">Proxies</button>
         <button class="nav-button" onclick="switchTab('More', this)">More</button>
         <div class="sidebar-launch-container">
   <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
@@ -271,12 +270,10 @@
             { name: "hi", url: "javascript:alert('Hello, Sev!');" },
           ],
           "More": [
+            { name: "Sev Browser", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/sev-browser.html" },
             { name: "Fireworks", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/fireworks.html" },
             { name: "Sev Cursor Playground", url: "https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/cursorplayground.html" },
           ],
-          "Proxies": [
-            { name: "Burger", url: "https://burgerawesome.neocities.org" },
-          ]
         };
 
 function switchTab(tabName, btn) {
