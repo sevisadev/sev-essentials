@@ -93,7 +93,10 @@
       <h3 id="title">Fireworks</h3>
       <div id="byline">
         <p>By </p>
-        <a href="https://github.com/sevisadev/ target="_blank">Sevvy Wevvy</a>
+        <a href="https://tylergordonhill.com/" target="_blank">Tyler Gordon Hill</a>
+      </div>
+      <button id="fullscreen" title="Hide the settings panel. Press escape to exit">Fullscreen</button>
+      <button id="share" title="Share the unique link to your settings configuration">Share</button>
       <form>
         <input type="checkbox" id="auto" name="auto" checked title="Automatically shoot off fireworks">
         <label for="auto" title="Automatically shoot off fireworks">Auto</label><br>
@@ -157,7 +160,7 @@
     </footer>
     <script>
 
-
+      /* HTML Element Variables */
 
       const main = document.getElementsByTagName("main")[0];
       const footer = document.getElementsByTagName("footer")[0];
@@ -190,11 +193,14 @@
 
 
 
+      /* Utility Functions */
 
+      //Random between
       function random(min, max) {
         return min === max ? min : Math.random() * (max - min) + parseInt(min);
       }
-
+      
+      //Random timing
       function setRandomInterval(func, minDelay, maxDelay) {
         let timeout;
         let running = 1;
@@ -218,7 +224,7 @@
 
 
 
-
+      /* Params */
 
       function updateVals() {
         const params = new window.URLSearchParams(window.location.search);
@@ -289,7 +295,7 @@
 
 
 
-
+      /* Firework Functions */
 
       function genColor() {
         let col = [0, 0, 0];
@@ -344,7 +350,7 @@
 
       function createFirework(x, y) {
         const sparks = random(sparksMin.value, sparksMax.value);
-        const col = genColor();
+        const col = genColor();//Random color (no min): "#"+("00000"+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
         const siz = random(sizeMin.value, sizeMax.value);
         const dist = random(fireworkDistMin.value, fireworkDistMax.value);
         let sparkList = [];
@@ -366,6 +372,7 @@
 
 
 
+      /* Listeners */
 
       main.addEventListener("click", function(e) {
         createFirework(e.offsetX, e.offsetY);
