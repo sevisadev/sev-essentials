@@ -313,8 +313,10 @@ function switchTab(tabName, btn) {
   document.getElementById('tabTitle').innerText = tabName;
 
   const subtitle = document.getElementById('tabSubtitle');
-  subtitle.innerText = (tabName === "Games") ? "   You may have to click on some games when they are opened for them to work" : "";
-  subtitle.innerText = (tabName === "Bookmarklets") ? "   Drag the bookmarklet you want into your bookmarks bar" : "";
+  if (tabName === "Games") { subtitle.innerText = "You may have to click on some games when they are opened for them to work";
+  } else if (tabName === "Bookmarklets") { subtitle.innerText = "Drag the bookmarklet you want into your bookmarks bar";
+  } else if (tabName === "Settings") { subtitle.innerText =  "Grayson Shults";
+  } else { subtitle.innerText =  ""; }
 
   const listContainer = document.getElementById('linkList');
   listContainer.innerHTML = '';
