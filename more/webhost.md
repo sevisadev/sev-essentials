@@ -1,7 +1,7 @@
 # Webhosts
 Webhosts can be used to open Sev Essentials with very low effort
 ## Official
-[google sites](https://sites.google.com/lsr7.net/sevessentialshost/home) | [wix](https://sevisadev.wixstudio.com/sev-essentials)
+[google sites 1](https://sites.google.com/lsr7.net/sevessentialshost/home) | [wix](https://sevisadev.wixstudio.com/sev-essentials) | [google sites 2](https://sites.google.com/lsr7.net/hasafskjghfajshkfjhaskjhfkajh/home)
 ## Un-Official
 
 # Make your own host
