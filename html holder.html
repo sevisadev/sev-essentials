@@ -323,7 +323,7 @@ function switchTab(tabName, btn) {
       const button = document.createElement('button');
       button.className = 'github-btn';
       button.innerText = link.name;
-      button.onclick = () => proxie(link.prox);
+      button.onclick = () => proxie(link.prox, link.name);
       listContainer.appendChild(button);
       } else if (link.url === "link") {
       const button = document.createElement('button');
@@ -341,10 +341,13 @@ function switchTab(tabName, btn) {
     }
   });
 }
-function proxie(link) {
+function proxie(link, name) {
             const newWindow = window.open('about:blank', '_blank');
               if (newWindow) {
-            newWindow.document.write(`<style>
+            newWindow.document.write(`<head>
+<title>${name}</title>
+</head>
+<style>
 body {
 font-family: "Times New Roman", serif;
 background-color: #4b097b;
