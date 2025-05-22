@@ -153,6 +153,14 @@
   font-style: italic;
 }
 
+.ClokeName {
+padding: 12px;
+background-color: #4b097b;
+border: 1px solid #8a2be2;
+color: #ffffff;
+border-radius:4px;
+}
+
       </style>
     </head>
     <body>
@@ -164,6 +172,7 @@
         <button class="nav-button" onclick="switchTab('Games', this)">Games</button>
         <button class="nav-button" onclick="switchTab('More', this)">More</button>
         <div class="sidebar-launch-container">
+  <button class="rounded-launch-button" onclick="switchTab('Settings', this)">Settings</button>
   <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
 </div>
 
@@ -297,6 +306,23 @@ function switchTab(tabName, btn) {
 
   const listContainer = document.getElementById('linkList');
   listContainer.innerHTML = '';
+
+  if (tabName === "Settings") {
+      const input = document.createElement('input');
+      input.type = 'github-btn';
+      input.className = 'ClokeName';
+      input.placeholder = 'Tab Name';
+      listContainer.appendChild(input);
+
+
+      input.addEventListener('input', (event) => {
+            if(event.target.value === "") {
+                document.title = 'Sev Essentials';
+            } else {
+                document.title = event.target.value;
+            }
+        });
+  }
 
   (tabLinks[tabName] || []).forEach(link => {
     if (tabName === "Bookmarklets") {
