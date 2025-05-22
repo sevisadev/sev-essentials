@@ -192,10 +192,12 @@ border-radius:4px;
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
 
+        let Particals = true;
+
         let width = canvas.width = window.innerWidth;
         let height = canvas.height = window.innerHeight;
-
         const spheres = [];
+
         for (let i = 0; i < 50; i++) {
           spheres.push({
             x: Math.random() * (width - 220) + 220,
@@ -214,10 +216,12 @@ border-radius:4px;
             ctx.fill();
 
             sphere.y += sphere.speed;
+            if(Particals) {
             if (sphere.y > height) {
               sphere.y = -sphere.radius;
               sphere.x = Math.random() * width;
             }
+          }
           });
           requestAnimationFrame(animate);
         }
@@ -308,11 +312,17 @@ function switchTab(tabName, btn) {
   listContainer.innerHTML = '';
 
   if (tabName === "Settings") {
-      const input = document.createElement('input');
-      input.type = 'github-btn';
-      input.className = 'ClokeName';
-      input.placeholder = 'Tab Name';
-      listContainer.appendChild(input);
+      const input1 = document.createElement('input');
+      input1.type = 'github-btn';
+      input1.className = 'ClokeName';
+      input1.placeholder = 'Tab Name';
+      listContainer.appendChild(input1);
+
+      const button1 = document.createElement('button');
+      button1.className = 'github-btn';
+      button1.innerText = 'Particals: On';
+      button1.onclick = () => pt(button1);
+      listContainer.appendChild(button1);
 
 
       input.addEventListener('input', (event) => {
@@ -402,6 +412,15 @@ color: #ffffff;
               newTab.document.close();
             })
             .catch(err => alert("Failed to load HTML: " + err));
+        }
+
+        function pt(but) {
+          Particals = !Particals;
+          if(but.innerText === 'Particals: On') {
+            but.innerText = 'Particals: Off';
+          } else {
+              but.innerText = 'Particals: On';
+          }
         }
 
         switchTab("Tools", document.querySelector('.nav-button:nth-of-type(1)'));
