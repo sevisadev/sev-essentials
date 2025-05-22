@@ -128,7 +128,10 @@
       
       const newWindow = window.open('about:blank', '_blank');
       if (newWindow) {
-        newWindow.document.write(`<style>
+        newWindow.document.write(`<head>
+<title>Sev Browser</title>
+</head>
+<style>
 body {
 font-family: "Times New Roman", serif;
 background-color: #4b097b;
