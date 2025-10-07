@@ -10,14 +10,12 @@
       overflow: hidden;
       color: #ffffff;
     }
-
     canvas {
       position: fixed;
       top: 0;
       left: 0;
       z-index: -1;
     }
-
     .sidebar {
       position: fixed;
       top: 0;
@@ -33,7 +31,6 @@
       flex-direction: column;
       align-items: stretch;
     }
-
     .sidebar h1 {
       text-align: center;
       font-size: 30px;
@@ -42,7 +39,6 @@
       padding: 20px 10px;
       background-color: #8a2be2;
     }
-
     .nav-button {
       display: block;
       width: 90%;
@@ -58,32 +54,26 @@
       margin-bottom: 5px;
       transition: background 0.3s;
     }
-
     .nav-button:hover {
       background-color: #6a0dad;
     }
-
     .nav-button.active {
       background-color: #4b097b;
     }
-
     .main-content {
       margin-left: 220px;
       padding: 20px;
       transition: margin-left 0.4s ease;
     }
-
     h1.title {
       color: #ffffff;
     }
-
     #linkList {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 15px;
       margin-top: 20px;
     }
-
     .github-btn {
       padding: 12px;
       background-color: #8a2be2;
@@ -94,17 +84,14 @@
       cursor: pointer;
       text-align: center;
     }
-
     .github-btn:hover {
       background-color: #6a0dad;
     }
-
     .sidebar-launch-container {
       margin-top: auto;
       padding: 10px;
       text-align: center;
     }
-
     .rounded-launch-button {
       padding: 10px 20px;
       background-color: #8a2be2;
@@ -116,11 +103,9 @@
       font-size: 16px;
       width: 90%;
     }
-
     .rounded-launch-button:hover {
       background-color: #6a0dad;
     }
-
     .sidebar-footer {
       padding: 15px 10px;
       text-align: center;
@@ -131,24 +116,20 @@
       background-color: #8a2be2;
       display: block;
     }
-
     .sidebar-footer:hover {
       color: #b9b9b9;
     }
-
     .title-container {
       display: flex;
       align-items: baseline;
       gap: 15px;
       flex-wrap: wrap;
     }
-
     .subtitle {
       font-size: 14px;
       color: #dddddd;
       font-style: italic;
     }
-
     .ClokeName {
       padding: 12px;
       background-color: #4b097b;
@@ -156,7 +137,6 @@
       color: #ffffff;
       border-radius:4px;
     }
-
     #gameGenBar {
       position: fixed;
       bottom: 0;
@@ -170,7 +150,6 @@
       justify-content: center;
       display: none;
     }
-
     #gamePrompt {
       flex: 1;
       padding: 8px;
@@ -180,7 +159,6 @@
       background-color: #4b097b;
       color: #fff;
     }
-
     #generateGameBtn {
       padding: 8px 16px;
       background-color: #4b097b;
@@ -189,11 +167,9 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     #generateGameBtn:hover {
       background-color: #6a0dad;
     }
-
     #popup {
       position: fixed;
       top: 20px;
@@ -205,7 +181,6 @@
       display: none;
       z-index: 10;
     }
-
     #popup button {
       margin-left: 10px;
       background: #4b097b;
@@ -215,7 +190,6 @@
       padding: 5px 10px;
       cursor: pointer;
     }
-
     #popup button:hover {
       background: #6a0dad;
     }
@@ -371,56 +345,16 @@
       }
 
       (tabLinks[tabName] || []).forEach(link => {
-        if (tabName === "Bookmarklets") {
-          const linkElement = document.createElement('a');
-          linkElement.className = 'github-btn';
-          linkElement.innerText = link.name;
-          linkElement.href = link.url;
-          linkElement.target = '_blank';
-          linkElement.onclick = (event) => {
-            event.preventDefault();
-          };
-          linkElement.draggable = true;
-          linkElement.addEventListener('dragstart', (event) => {
-            event.dataTransfer.setData('text/plain', link.url);
-          });
-          listContainer.appendChild(linkElement);
-        } else if (tabName === "EG") {
-          const button = document.createElement('button');
-          button.className = 'github-btn';
-          button.innerText = link.name;
-          button.onclick = () => proxie(link.url);
-          listContainer.appendChild(button);
+        const button = document.createElement('button');
+        button.className = 'github-btn';
+        button.innerText = link.name;
+        if (link.url === "link") {
+          button.onclick = () => {window.open(link.prox, '_blank');};
         } else {
-          if (link.url === "prox") {
-            const button = document.createElement('button');
-            button.className = 'github-btn';
-            button.innerText = link.name;
-            button.onclick = () => proxie(link.prox, link.name);
-            listContainer.appendChild(button);
-          } else if (link.url === "link") {
-            const button = document.createElement('button');
-            button.className = 'github-btn';
-            button.innerText = link.name;
-            button.onclick = () => {window.open(link.prox, '_blank');};
-            listContainer.appendChild(button);
-          } else {
-            const button = document.createElement('button');
-            button.className = 'github-btn';
-            button.innerText = link.name;
-            button.onclick = () => openGitHubHTML(link.url);
-            listContainer.appendChild(button);
-          }
+          button.onclick = () => openGitHubHTML(link.url);
         }
+        listContainer.appendChild(button);
       });
-    }
-
-    function proxie(link, name) {
-      const newWindow = window.open('about:blank', '_blank');
-      if (newWindow) {
-        newWindow.document.write(`<head><title>${name}</title></head><style>body{font-family:"Times New Roman",serif;background-color:#4b097b;margin:0;overflow:hidden;color:#ffffff;}</style><body><div><embed src=${link} width="100%" height="100%"></div></body>`);
-        newWindow.document.close();
-      }
     }
 
     function openGitHubHTML(url) {
@@ -452,10 +386,14 @@
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: "prompt=" + encodeURIComponent(prompt)
       })
-      .then(r => r.text())
-      .then(code => {
-        aiGameCode = code;
-        showPopup();
+      .then(r => r.json())
+      .then(data => {
+        if (data.response) {
+          aiGameCode = data.response;
+          showPopup();
+        } else {
+          alert("No game code returned.");
+        }
       })
       .catch(e => alert("Failed to generate game: " + e));
     }
