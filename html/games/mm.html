@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Meth Mines</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1b1028;
+      color: #e9ddff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding-top: 20px;
+    }
+    h1 {
+      color: #b28ad9;
+      font-size: 3em;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+      margin-bottom: 16px;
+    }
+    #game-container {
+      background-color: #2a1555;
+      border: 2px solid #4c2a88;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      max-width: 100%;
+    }
+    #header {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+    .chip {
+      font-size: 1.05em;
+      font-weight: bold;
+      padding: 6px 10px;
+      background-color: #3a1c6f;
+      border-radius: 6px;
+      min-width: 70px;
+      text-align: center;
+      border: 1px solid #5c36a7;
+    }
+    #reset-button, #settings-toggle {
+      background-color: #5c36a7;
+      color: #f4ecff;
+      border: none;
+      padding: 8px 12px;
+      font-size: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color .2s ease;
+    }
+    #reset-button:hover, #settings-toggle:hover {
+      background-color: #7a4dd2;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+    td {
+      width: 26px;
+      height: 26px;
+      border: 1px solid #4c2a88;
+      text-align: center;
+      font-size: 1.1em;
+      cursor: pointer;
+      background-color: #2a1555;
+      color: #f4ecff;
+      user-select: none;
+    }
+    td.covered:hover {
+      filter: brightness(1.15);
+    }
+    td.revealed {
+      background-color: #4a2a8f;
+      border: 1px solid #6c46c3;
+      cursor: default;
+    }
+    td.mine {
+      background-color: #a0145e;
+      color: #fff;
+    }
+    td.flagged {
+      background-color: #e2c73a;
+      color: #1b1028;
+    }
+    td.question {
+      background-color: #8b6fd8;
+      color: #1b1028;
+    }
+    #difficulty-select {
+      margin-top: 12px;
+      padding: 8px;
+      border-radius: 6px;
+      background-color: #3a1c6f;
+      color: #f4ecff;
+      border: 1px solid #5c36a7;
+    }
+    #message {
+      margin-top: 12px;
+      background: #3a1c6f;
+      border: 1px solid #5c36a7;
+      padding: 8px 12px;
+      border-radius: 6px;
+      min-height: 24px;
+      max-width: 640px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    #message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #settings-panel {
+      width: 900px;
+      max-width: 95vw;
+      background: #23123e;
+      border: 2px solid #4c2a88;
+      border-radius: 10px;
+      margin-top: 16px;
+      padding: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: scale(0.98);
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    #settings-panel.show {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+    #settings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+      gap: 10px 14px;
+    }
+    .setting {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #2e1656;
+      border: 1px solid #5c36a7;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .setting label {
+      font-size: .95em;
+      color: #e9ddff;
+      margin-right: 8px;
+    }
+    .setting input[type="number"],
+    .setting select {
+      background: #3a1c6f;
+      color: #f4ecff;
+      border: 1px solid #6c46c3;
+      border-radius: 6px;
+      padding: 6px 8px;
+      width: 120px;
+    }
+    .setting input[type="checkbox"] {
+      accent-color: #7a4dd2;
+      width: 18px;
+      height: 18px;
+    }
+    #settings-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    #apply-settings, #reset-settings {
+      background-color: #5c36a7;
+      color: #f4ecff;
+      border: none;
+      padding: 8px 12px;
+      font-size: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color .2s ease;
+    }
+    #apply-settings:hover, #reset-settings:hover {
+      background-color: #7a4dd2;
+    }
+    .legend-nums-1 { color: #e6dbff; }
+    .legend-nums-2 { color: #d6c6ff; }
+    .legend-nums-3 { color: #c7b0ff; }
+    .legend-nums-4 { color: #b899ff; }
+    .legend-nums-5 { color: #a983ff; }
+    .legend-nums-6 { color: #996cff; }
+    .legend-nums-7 { color: #8a56ff; }
+    .legend-nums-8 { color: #7a40ff; }
+  </style>
+</head>
+<body>
+  <h1>Meth Mines</h1>
+  <div id="game-container">
+    <div id="header">
+      <div class="chip">Flags: <span id="flags-left"></span></div>
+      <button id="reset-button">Reset</button>
+      <div class="chip">Time: <span id="time-elapsed">0</span></div>
+      <button id="settings-toggle">Settings</button>
+    </div>
+    <table id="board"></table>
+  </div>
+  <select id="difficulty-select">
+  </select>
+  <div id="message"></div>
+  <div id="settings-panel">
+    <div id="settings-grid">
+      <div class="setting"><label for="rows">Rows</label><input id="rows" type="number" min="5" max="50" value="9"></div>
+      <div class="setting"><label for="cols">Columns</label><input id="cols" type="number" min="5" max="50" value="9"></div>
+      <div class="setting"><label for="mines">Mines</label><input id="mines" type="number" min="1" max="500" value="10"></div>
+
+      <div class="setting"><label for="safe-first-click">Safe first click</label><input id="safe-first-click" type="checkbox" checked></div>
+      <div class="setting"><label for="safe-neighborhood">Protect neighbors on first click</label><input id="safe-neighborhood" type="checkbox" checked></div>
+      <div class="setting"><label for="flood-open">Classic flood open</label><input id="flood-open" type="checkbox" checked></div>
+
+      <div class="setting"><label for="chord-click">Chord on numbers (open neighbors)</label><input id="chord-click" type="checkbox" checked></div>
+      <div class="setting"><label for="auto-chord-correct">Auto chord only when flags match</label><input id="auto-chord-correct" type="checkbox" checked></div>
+      <div class="setting"><label for="allow-question">Right-click cycles flag/question</label><input id="allow-question" type="checkbox"></div>
+
+      <div class="setting"><label for="limited-flags">Limit flags to mine count</label><input id="limited-flags" type="checkbox" checked></div>
+      <div class="setting"><label for="auto-flag">Auto-flag solved numbers</label><input id="auto-flag" type="checkbox"></div>
+      <div class="setting"><label for="hint-reveal">Allow single-cell hint</label><input id="hint-reveal" type="checkbox"></div>
+
+      <div class="setting"><label for="lives">Lives (mine hits allowed)</label><input id="lives" type="number" min="0" max="5" value="0"></div>
+      <div class="setting"><label for="undo-moves">Allow undo</label><input id="undo-moves" type="checkbox"></div>
+      <div class="setting"><label for="max-undos">Max undos</label><input id="max-undos" type="number" min="0" max="100" value="20"></div>
+
+      <div class="setting"><label for="wrap-edges">Wrap edges top/bottom/left/right</label><input id="wrap-edges" type="checkbox"></div>
+      <div class="setting"><label for="eight-neighbors">Use 8-direction adjacency</label><input id="eight-neighbors" type="checkbox" checked></div>
+      <div class="setting"><label for="cluster-mines">Prefer clustered mines</label><input id="cluster-mines" type="checkbox"></div>
+
+      <div class="setting"><label for="seed">Random seed</label><input id="seed" type="number" min="0" max="999999" value="0"></div>
+      <div class="setting"><label for="timed-mode">Timed mode</label><input id="timed-mode" type="checkbox" checked></div>
+      <div class="setting"><label for="freeze-timer-on-pause">Freeze timer when settings open</label><input id="freeze-timer-on-pause" type="checkbox" checked></div>
+
+      <div class="setting"><label for="bonus-empty">Bonus empty openings per click</label><input id="bonus-empty" type="number" min="0" max="10" value="0"></div>
+      <div class="setting"><label for="misclick-grace">Ignore first misclick after chord</label><input id="misclick-grace" type="checkbox"></div>
+      <div class="setting"><label for="reveal-border-numbers">Reveal border numbers on flood</label><input id="reveal-border-numbers" type="checkbox" checked></div>
+
+      <div class="setting"><label for="no-guess-mode">No guess mode (guarantee solvable steps)</label><input id="no-guess-mode" type="checkbox"></div>
+      <div class="setting"><label for="symmetric-mine-gen">Symmetric mine generation</label><input id="symmetric-mine-gen" type="checkbox"></div>
+      <div class="setting"><label for="limit-first-open">Limit first open radius</label><input id="limit-first-open" type="number" min="0" max="10" value="0"></div>
+
+      <div class="setting"><label for="instant-lose-on-mine">Instant lose on mine</label><input id="instant-lose-on-mine" type="checkbox" checked></div>
+      <div class="setting"><label for="reveal-on-win">Reveal mines on win</label><input id="reveal-on-win" type="checkbox" checked></div>
+      <div class="setting"><label for="stop-on-win">Stop timer on win</label><input id="stop-on-win" type="checkbox" checked></div>
+
+      <div class="setting"><label for="start-with-hints">Start with N safe reveals</label><input id="start-with-hints" type="number" min="0" max="50" value="0"></div>
+      <div class="setting"><label for="weighted-numbers">Weight mine placement by target density</label><input id="weighted-numbers" type="checkbox"></div>
+      <div class="setting"><label for="target-density">Target mine density (%)</label><input id="target-density" type="number" min="1" max="80" value="15"></div>
+
+      <div class="setting"><label for="double-click-open">Double-click opens neighbors</label><input id="double-click-open" type="checkbox"></div>
+      <div class="setting"><label for="prevent-50-50">Reduce 50/50 situations</label><input id="prevent-50-50" type="checkbox"></div>
+      <div class="setting"><label for="fast-flood">Fast flood expansion</label><input id="fast-flood" type="checkbox" checked></div>
+    </div>
+    <div id="settings-actions">
+      <button id="apply-settings">Apply</button>
+      <button id="reset-settings">Reset to defaults</button>
+    </div>
+  </div>
+
+  <script>
+    const resetButton = document.getElementById('reset-button');
+    const difficultySelect = document.getElementById('difficulty-select');
+    const boardElement = document.getElementById('board');
+    const flagCounterElement = document.getElementById('flags-left');
+    const timerElement = document.getElementById('time-elapsed');
+    const messageElement = document.getElementById('message');
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsPanel = document.getElementById('settings-panel');
+
+    let board = [];
+    let rows = 9;
+    let cols = 9;
+    let mines = 10;
+    let flagsLeft = mines;
+    let gameOver = false;
+    let timerInterval;
+    let seconds = 0;
+    let minesPlaced = false;
+    let livesRemaining = 0;
+    let history = [];
+    let settings = defaultSettings();
+    let pausedForSettings = false;
+
+    function defaultSettings() {
+      return {
+        rows: 9, cols: 9, mines: 10,
+        safeFirstClick: true,
+        safeNeighborhood: true,
+        floodOpen: true,
+        chordClick: true,
+        autoChordCorrect: true,
+        allowQuestion: false,
+        limitedFlags: true,
+        autoFlag: false,
+        hintReveal: false,
+        lives: 0,
+        undoMoves: false,
+        maxUndos: 20,
+        wrapEdges: false,
+        eightNeighbors: true,
+        clusterMines: false,
+        seed: 0,
+        timedMode: true,
+        freezeTimerOnPause: true,
+        bonusEmpty: 0,
+        misclickGrace: false,
+        revealBorderNumbers: true,
+        noGuessMode: false,
+        symmetricMineGen: false,
+        limitFirstOpen: 0,
+        instantLoseOnMine: true,
+        revealOnWin: true,
+        stopOnWin: true,
+        startWithHints: 0,
+        weightedNumbers: false,
+        targetDensity: 15,
+        doubleClickOpen: false,
+        prevent5050: false,
+        fastFlood: true
+      };
+    }
+
+    function setDifficulty(difficulty) {
+      if (difficulty === 'easy') {
+        rows = 9; cols = 9; mines = 10;
+      } else if (difficulty === 'medium') {
+        rows = 16; cols = 16; mines = 40;
+      } else if (difficulty === 'hard') {
+        rows = 16; cols = 30; mines = 99;
+      }
+      rows = settings.rows || rows;
+      cols = settings.cols || cols;
+      mines = settings.mines || mines;
+      flagsLeft = mines;
+      flagCounterElement.innerText = flagsLeft;
+    }
+
+    function initializeGame() {
+      gameOver = false;
+      seconds = 0;
+      clearInterval(timerInterval);
+      timerElement.innerText = seconds;
+      minesPlaced = false;
+      livesRemaining = settings.lives;
+      history = [];
+      setDifficulty(difficultySelect.value);
+      generateBoard();
+      calculateAdjacentMines();
+      renderBoard();
+      if (settings.timedMode) startTimer();
+      else clearInterval(timerInterval);
+      if (settings.startWithHints > 0) {
+        for (let k = 0; k < settings.startWithHints; k++) {
+          const cell = randomSafeCell();
+          if (cell) openCell(cell);
+        }
+        renderBoard();
+      }
+      showMessage('');
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        seconds++;
+        timerElement.innerText = seconds;
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      if (settings.timedMode) clearInterval(timerInterval);
+    }
+
+    function resumeTimer() {
+      if (settings.timedMode) startTimer();
+    }
+
+    function generateBoard() {
+      board = [];
+      for (let r = 0; r < rows; r++) {
+        let rowArr = [];
+        for (let c = 0; c < cols; c++) {
+          rowArr.push({
+            row: r,
+            col: c,
+            isMine: false,
+            isRevealed: false,
+            isFlagged: false,
+            isQuestion: false,
+            adjacentMines: 0
+          });
+        }
+        board.push(rowArr);
+      }
+      updateFlagsLeft();
+    }
+
+    function rng() {
+      if (settings.seed && settings.seed !== 0) {
+        let x = (settings.seed ^ 0x5DEECE66D) >>> 0;
+        x = (x * 1664525 + 1013904223) >>> 0;
+        settings.seed = x;
+        return (x & 0xFFFFFF) / 0x1000000;
+      } else {
+        return Math.random();
+      }
+    }
+
+    function placeMines(firstCell) {
+      let placed = 0;
+      const protectedSet = new Set();
+      if (settings.safeFirstClick && firstCell) {
+        protectedSet.add(firstCell.row + ',' + firstCell.col);
+        if (settings.safeNeighborhood) {
+          neighborsOf(firstCell.row, firstCell.col).forEach(n => {
+            protectedSet.add(n.row + ',' + n.col);
+          });
+        }
+      }
+      const positions = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const key = r + ',' + c;
+          if (!protectedSet.has(key)) positions.push({r, c});
+        }
+      }
+      if (settings.clusterMines) shuffle(positions, true); else shuffle(positions, false);
+      if (settings.symmetricMineGen) symmetrize(positions);
+      while (placed < mines && positions.length > 0) {
+        let idx = Math.floor(rng() * positions.length);
+        const pos = positions.splice(idx, 1)[0];
+        if (!board[pos.r][pos.c].isMine) {
+          board[pos.r][pos.c].isMine = true;
+          placed++;
+        }
+      }
+      calculateAdjacentMines();
+      minesPlaced = true;
+    }
+
+    function symmetrize(posList) {
+      for (let i = 0; i < posList.length; i++) {
+        const p = posList[i];
+        posList.push({r: rows - 1 - p.r, c: cols - 1 - p.c});
+      }
+    }
+
+    function shuffle(arr, cluster) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      if (cluster) {
+        arr.sort((a,b) => (a.r + a.c) - (b.r + b.c));
+      }
+    }
+
+    function calculateAdjacentMines() {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (!board[r][c].isMine) {
+            let total = 0;
+            neighborsOf(r, c).forEach(n => {
+              if (board[n.row][n.col].isMine) total++;
+            });
+            board[r][c].adjacentMines = total;
+          }
+        }
+      }
+    }
+
+    function neighborsOf(r, c) {
+      const dirs = settings.eightNeighbors ? [-1,0,1] : [0,1,-1]; 
+      const list = [];
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i === 0 && j === 0) continue;
+          if (!settings.eightNeighbors && Math.abs(i) + Math.abs(j) !== 1) continue;
+          let nr = r + i, nc = c + j;
+          if (settings.wrapEdges) {
+            nr = (nr + rows) % rows;
+            nc = (nc + cols) % cols;
+          }
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+            list.push({row: nr, col: nc});
+          }
+        }
+      }
+      return list;
+    }
+
+    function renderBoard() {
+      boardElement.innerHTML = "";
+      for (let r = 0; r < rows; r++) {
+        let rowElement = document.createElement("tr");
+        for (let c = 0; c < cols; c++) {
+          let cell = board[r][c];
+          let cellElement = document.createElement("td");
+          cellElement.classList.add(cell.isRevealed ? "revealed" : "covered");
+          cellElement.dataset.row = r;
+          cellElement.dataset.col = c;
+
+          cellElement.addEventListener("click", (e) => {
+            if (settings.doubleClickOpen && e.detail === 2) {
+              chordOpen(cell);
+              return;
+            }
+            cellClick(cell);
+          });
+
+          cellElement.addEventListener("contextmenu", (e) => flagCell(e, cell));
+
+          if (cell.isRevealed) {
+            if (cell.isMine) {
+              cellElement.textContent = "💣";
+              cellElement.classList.add("mine");
+            } else if (cell.adjacentMines > 0) {
+              cellElement.textContent = cell.adjacentMines;
+              cellElement.classList.add("legend-nums-" + cell.adjacentMines);
+            } else {
+              cellElement.textContent = "";
+            }
+          } else {
+            if (cell.isFlagged) {
+              cellElement.textContent = "🚩";
+              cellElement.classList.add("flagged");
+            } else if (cell.isQuestion) {
+              cellElement.textContent = "?";
+              cellElement.classList.add("question");
+            } else {
+              cellElement.textContent = "";
+            }
+          }
+
+          rowElement.appendChild(cellElement);
+        }
+        boardElement.appendChild(rowElement);
+      }
+      updateFlagsLeft();
+    }
+
+    function updateFlagsLeft() {
+      if (settings.limitedFlags) {
+        flagsLeft = mines - countFlags();
+      } else {
+        flagsLeft = Math.max(0, mines - countFlags());
+      }
+      flagCounterElement.innerText = flagsLeft;
+    }
+
+    function countFlags() {
+      let count = 0;
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) if (board[r][c].isFlagged) count++;
+      return count;
+    }
+
+    function cellClick(cell) {
+      if (gameOver || cell.isRevealed) return;
+      if (cell.isFlagged || cell.isQuestion) return;
+
+      if (!minesPlaced) {
+        placeMines(cell);
+        if (settings.limitFirstOpen > 0) {
+          revealRadius(cell.row, cell.col, settings.limitFirstOpen);
+          renderBoard();
+          return;
+        }
+      }
+
+      pushHistory();
+
+      openCell(cell);
+
+      if (settings.bonusEmpty > 0 && cell.isRevealed && !cell.isMine && cell.adjacentMines === 0) {
+        for (let k = 0; k < settings.bonusEmpty; k++) {
+          const bonus = randomZeroCell();
+          if (bonus) openCell(bonus);
+        }
+      }
+
+      if (settings.chordClick && cell.isRevealed && cell.adjacentMines > 0) {
+        const flaggedNeighbors = neighborsOf(cell.row, cell.col).filter(n => board[n.row][n.col].isFlagged).length;
+        if (!settings.autoChordCorrect || flaggedNeighbors === cell.adjacentMines) {
+          chordOpen(cell);
+        }
+      }
+
+      if (checkWinCondition()) {
+        if (settings.stopOnWin) clearInterval(timerInterval);
+        if (settings.revealOnWin) revealAllMines(true);
+        showMessage("You win!");
+        gameOver = true;
+      }
+
+      renderBoard();
+    }
+
+    function openCell(cell) {
+      if (cell.isRevealed) return;
+      cell.isRevealed = true;
+
+      if (cell.isMine) {
+        if (settings.instantLoseOnMine) {
+          handleMineHit(cell);
+          return;
+        } else {
+          handleMineHit(cell);
+        }
+      } else if (settings.floodOpen && cell.adjacentMines === 0) {
+        floodReveal(cell.row, cell.col);
+        if (settings.revealBorderNumbers) revealBorderNumbers(cell.row, cell.col);
+      }
+    }
+
+    function handleMineHit(cell) {
+      if (settings.lives > 0 && livesRemaining > 0) {
+        livesRemaining--;
+        cell.isMine = false;
+        recalcAll();
+        showMessage("Mine hit. Lives remaining: " + livesRemaining);
+        return;
+      }
+      revealAllMines(false);
+      clearInterval(timerInterval);
+      showMessage("Game Over!");
+      gameOver = true;
+    }
+
+    function recalcAll() {
+      calculateAdjacentMines();
+      renderBoard();
+    }
+
+    function floodReveal(row, col) {
+      const stack = [{row, col}];
+      const seen = new Set();
+      while (stack.length) {
+        const p = stack.pop();
+        const key = p.row + ',' + p.col;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const cell = board[p.row][p.col];
+        if (cell.isMine || cell.isFlagged || cell.isQuestion) continue;
+        cell.isRevealed = true;
+        if (cell.adjacentMines === 0) {
+          neighborsOf(p.row, p.col).forEach(n => {
+            const nCell = board[n.row][n.col];
+            if (!nCell.isRevealed && !nCell.isMine) stack.push(n);
+          });
+        }
+      }
+    }
+
+    function revealBorderNumbers(row, col) {
+      const zeros = [];
+      const seen = new Set();
+      const stack = [{row, col}];
+      while (stack.length) {
+        const p = stack.pop();
+        const key = p.row + ',' + p.col;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const cell = board[p.row][p.col];
+        if (cell.adjacentMines === 0) {
+          zeros.push(p);
+          neighborsOf(p.row, p.col).forEach(n => {
+            const nCell = board[n.row][n.col];
+            if (!nCell.isRevealed && !nCell.isMine) stack.push(n);
+          });
+        }
+      }
+      zeros.forEach(p => {
+        neighborsOf(p.row, p.col).forEach(n => {
+          const nc = board[n.row][n.col];
+          if (!nc.isMine) nc.isRevealed = true;
+        });
+      });
+    }
+
+    function chordOpen(cell) {
+      const neigh = neighborsOf(cell.row, cell.col);
+      const flaggedNeighbors = neigh.filter(n => board[n.row][n.col].isFlagged).length;
+      if (flaggedNeighbors !== cell.adjacentMines && settings.autoChordCorrect) return;
+      for (const n of neigh) {
+        const nc = board[n.row][n.col];
+        if (!nc.isFlagged && !nc.isQuestion && !nc.isRevealed) {
+          openCell(nc);
+        }
+      }
+    }
+
+    function flagCell(e, cell) {
+      e.preventDefault();
+      if (gameOver || cell.isRevealed) return;
+      if (settings.limitedFlags) {
+        if (!cell.isFlagged && flagsLeft <= 0 && !settings.allowQuestion) {
+          showMessage("No flags left");
+          return;
+        }
+      }
+      pushHistory();
+      if (settings.allowQuestion) {
+        if (!cell.isFlagged && !cell.isQuestion) {
+          if (settings.limitedFlags && flagsLeft <= 0) { cell.isQuestion = true; }
+          else { cell.isFlagged = true; }
+        } else if (cell.isFlagged) {
+          cell.isFlagged = false;
+          cell.isQuestion = true;
+        } else if (cell.isQuestion) {
+          cell.isQuestion = false;
+        }
+      } else {
+        if (cell.isFlagged) {
+          cell.isFlagged = false;
+        } else {
+          cell.isFlagged = true;
+        }
+      }
+      updateFlagsLeft();
+
+      if (settings.autoFlag) {
+        autoFlagAround();
+      }
+
+      renderBoard();
+    }
+
+    function autoFlagAround() {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cell = board[r][c];
+          if (cell.isRevealed && cell.adjacentMines > 0) {
+            const neigh = neighborsOf(r, c);
+            const hidden = neigh.filter(n => !board[n.row][n.col].isRevealed && !board[n.row][n.col].isFlagged);
+            const flagged = neigh.filter(n => board[n.row][n.col].isFlagged).length;
+            if (hidden.length > 0 && (hidden.length + flagged) === cell.adjacentMines) {
+              hidden.forEach(n => board[n.row][n.col].isFlagged = true);
+            }
+          }
+        }
+      }
+      updateFlagsLeft();
+    }
+
+    function revealRadius(r, c, rad) {
+      for (let i = -rad; i <= rad; i++) {
+        for (let j = -rad; j <= rad; j++) {
+          const nr = r + i, nc = c + j;
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+            const cell = board[nr][nc];
+            if (!cell.isMine) cell.isRevealed = true;
+          }
+        }
+      }
+    }
+
+    function revealAllMines(onWin) {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (board[r][c].isMine) {
+            board[r][c].isRevealed = true;
+          }
+        }
+      }
+      gameOver = !onWin;
+      clearInterval(timerInterval);
+    }
+
+    function checkWinCondition() {
+      let unrevealedCount = 0;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (!board[r][c].isRevealed && !board[r][c].isMine) {
+            unrevealedCount++;
+          }
+        }
+      }
+      return unrevealedCount === 0;
+    }
+
+    function pushHistory() {
+      if (!settings.undoMoves) return;
+      if (history.length >= settings.maxUndos) history.shift();
+      const snapshot = board.map(row => row.map(cell => ({
+        row: cell.row,
+        col: cell.col,
+        isMine: cell.isMine,
+        isRevealed: cell.isRevealed,
+        isFlagged: cell.isFlagged,
+        isQuestion: cell.isQuestion,
+        adjacentMines: cell.adjacentMines
+      })));
+      history.push({
+        board: snapshot,
+        flagsLeft,
+        livesRemaining,
+        seconds
+      });
+    }
+
+    function undo() {
+      if (!settings.undoMoves || history.length === 0) return;
+      const last = history.pop();
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const src = last.board[r][c];
+          board[r][c].isMine = src.isMine;
+          board[r][c].isRevealed = src.isRevealed;
+          board[r][c].isFlagged = src.isFlagged;
+          board[r][c].isQuestion = src.isQuestion;
+          board[r][c].adjacentMines = src.adjacentMines;
+        }
+      }
+      flagsLeft = last.flagsLeft;
+      livesRemaining = last.livesRemaining;
+      seconds = last.seconds;
+      timerElement.innerText = seconds;
+      renderBoard();
+      showMessage("Undo performed");
+    }
+
+    function randomSafeCell() {
+      const list = [];
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const cell = board[r][c];
+        if (!cell.isMine && !cell.isRevealed) list.push(cell);
+      }
+      if (list.length === 0) return null;
+      return list[Math.floor(rng() * list.length)];
+    }
+
+    function randomZeroCell() {
+      const list = [];
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const cell = board[r][c];
+        if (!cell.isMine && !cell.isRevealed && cell.adjacentMines === 0) list.push(cell);
+      }
+      if (list.length === 0) return null;
+      return list[Math.floor(rng() * list.length)];
+    }
+
+    function showMessage(text) {
+      messageElement.textContent = text;
+      if (text && text.length > 0) {
+        messageElement.classList.add('show');
+      } else {
+        messageElement.classList.remove('show');
+      }
+    }
+
+    resetButton.addEventListener('click', initializeGame);
+    difficultySelect.addEventListener('change', initializeGame);
+
+    settingsToggle.addEventListener('click', () => {
+      const show = !settingsPanel.classList.contains('show');
+      if (show) {
+        settingsPanel.classList.add('show');
+        if (settings.freezeTimerOnPause) pauseTimer();
+      } else {
+        settingsPanel.classList.remove('show');
+        if (settings.freezeTimerOnPause) resumeTimer();
+      }
+    });
+
+    document.getElementById('apply-settings').addEventListener('click', () => {
+      applySettingsFromUI();
+      settingsPanel.classList.remove('show');
+      initializeGame();
+    });
+
+    document.getElementById('reset-settings').addEventListener('click', () => {
+      settings = defaultSettings();
+      setUIFromSettings();
+      showMessage("Settings reset");
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+        undo();
+      }
+      if (e.key === 'h' && settings.hintReveal) {
+        const cell = randomSafeCell();
+        if (cell) {
+          pushHistory();
+          openCell(cell);
+          renderBoard();
+          showMessage("Hint used");
+        }
+      }
+    });
+
+    function applySettingsFromUI() {
+      settings.rows = clampInt(parseInt(document.getElementById('rows').value), 5, 50);
+      settings.cols = clampInt(parseInt(document.getElementById('cols').value), 5, 50);
+      settings.mines = clampInt(parseInt(document.getElementById('mines').value), 1, settings.rows * settings.cols - 1);
+
+      settings.safeFirstClick = document.getElementById('safe-first-click').checked;
+      settings.safeNeighborhood = document.getElementById('safe-neighborhood').checked;
+      settings.floodOpen = document.getElementById('flood-open').checked;
+
+      settings.chordClick = document.getElementById('chord-click').checked;
+      settings.autoChordCorrect = document.getElementById('auto-chord-correct').checked;
+      settings.allowQuestion = document.getElementById('allow-question').checked;
+
+      settings.limitedFlags = document.getElementById('limited-flags').checked;
+      settings.autoFlag = document.getElementById('auto-flag').checked;
+      settings.hintReveal = document.getElementById('hint-reveal').checked;
+
+      settings.lives = clampInt(parseInt(document.getElementById('lives').value), 0, 5);
+      settings.undoMoves = document.getElementById('undo-moves').checked;
+      settings.maxUndos = clampInt(parseInt(document.getElementById('max-undos').value), 0, 100);
+
+      settings.wrapEdges = document.getElementById('wrap-edges').checked;
+      settings.eightNeighbors = document.getElementById('eight-neighbors').checked;
+      settings.clusterMines = document.getElementById('cluster-mines').checked;
+
+      settings.seed = clampInt(parseInt(document.getElementById('seed').value), 0, 999999);
+      settings.timedMode = document.getElementById('timed-mode').checked;
+      settings.freezeTimerOnPause = document.getElementById('freeze-timer-on-pause').checked;
+
+      settings.bonusEmpty = clampInt(parseInt(document.getElementById('bonus-empty').value), 0, 10);
+      settings.misclickGrace = document.getElementById('misclick-grace').checked;
+      settings.revealBorderNumbers = document.getElementById('reveal-border-numbers').checked;
+
+      settings.noGuessMode = document.getElementById('no-guess-mode').checked;
+      settings.symmetricMineGen = document.getElementById('symmetric-mine-gen').checked;
+      settings.limitFirstOpen = clampInt(parseInt(document.getElementById('limit-first-open').value), 0, 10);
+
+      settings.instantLoseOnMine = document.getElementById('instant-lose-on-mine').checked;
+      settings.revealOnWin = document.getElementById('reveal-on-win').checked;
+      settings.stopOnWin = document.getElementById('stop-on-win').checked;
+
+      settings.startWithHints = clampInt(parseInt(document.getElementById('start-with-hints').value), 0, 50);
+      settings.weightedNumbers = document.getElementById('weighted-numbers').checked;
+      settings.targetDensity = clampInt(parseInt(document.getElementById('target-density').value), 1, 80);
+
+      settings.doubleClickOpen = document.getElementById('double-click-open').checked;
+      settings.prevent5050 = document.getElementById('prevent-50-50').checked;
+      settings.fastFlood = document.getElementById('fast-flood').checked;
+    }
+
+    function setUIFromSettings() {
+      document.getElementById('rows').value = settings.rows;
+      document.getElementById('cols').value = settings.cols;
+      document.getElementById('mines').value = settings.mines;
+
+      document.getElementById('safe-first-click').checked = settings.safeFirstClick;
+      document.getElementById('safe-neighborhood').checked = settings.safeNeighborhood;
+      document.getElementById('flood-open').checked = settings.floodOpen;
+
+      document.getElementById('chord-click').checked = settings.chordClick;
+      document.getElementById('auto-chord-correct').checked = settings.autoChordCorrect;
+      document.getElementById('allow-question').checked = settings.allowQuestion;
+
+      document.getElementById('limited-flags').checked = settings.limitedFlags;
+      document.getElementById('auto-flag').checked = settings.autoFlag;
+      document.getElementById('hint-reveal').checked = settings.hintReveal;
+
+      document.getElementById('lives').value = settings.lives;
+      document.getElementById('undo-moves').checked = settings.undoMoves;
+      document.getElementById('max-undos').value = settings.maxUndos;
+
+      document.getElementById('wrap-edges').checked = settings.wrapEdges;
+      document.getElementById('eight-neighbors').checked = settings.eightNeighbors;
+      document.getElementById('cluster-mines').checked = settings.clusterMines;
+
+      document.getElementById('seed').value = settings.seed;
+      document.getElementById('timed-mode').checked = settings.timedMode;
+      document.getElementById('freeze-timer-on-pause').checked = settings.freezeTimerOnPause;
+
+      document.getElementById('bonus-empty').value = settings.bonusEmpty;
+      document.getElementById('misclick-grace').checked = settings.misclickGrace;
+      document.getElementById('reveal-border-numbers').checked = settings.revealBorderNumbers;
+
+      document.getElementById('no-guess-mode').checked = settings.noGuessMode;
+      document.getElementById('symmetric-mine-gen').checked = settings.symmetricMineGen;
+      document.getElementById('limit-first-open').value = settings.limitFirstOpen;
+
+      document.getElementById('instant-lose-on-mine').checked = settings.instantLoseOnMine;
+      document.getElementById('reveal-on-win').checked = settings.revealOnWin;
+      document.getElementById('stop-on-win').checked = settings.stopOnWin;
+
+      document.getElementById('start-with-hints').value = settings.startWithHints;
+      document.getElementById('weighted-numbers').checked = settings.weightedNumbers;
+      document.getElementById('target-density').value = settings.targetDensity;
+
+      document.getElementById('double-click-open').checked = settings.doubleClickOpen;
+      document.getElementById('prevent-50-50').checked = settings.prevent5050;
+      document.getElementById('fast-flood').checked = settings.fastFlood;
+    }
+
+    function clampInt(n, min, max) {
+      if (isNaN(n)) n = min;
+      return Math.max(min, Math.min(max, n));
+    }
+
+    initializeGame();
+    setUIFromSettings();
+  </script>
+</body>
+</html>
