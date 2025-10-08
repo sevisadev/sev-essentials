@@ -46,6 +46,8 @@ h1.title{font-size:34px;margin:0;animation:fadeIn .6s var(--ease)}
   h1.title{font-size:22px}
   .nav-button{font-size:12px;padding:10px}
 }
+
+#particles2 { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.95; transition: opacity .6s var(--ease); }
 </style>
 </head>
 <body>
@@ -76,6 +78,8 @@ h1.title{font-size:34px;margin:0;animation:fadeIn .6s var(--ease)}
   <div class="txt" id="popupText">AI-generated game is ready.</div>
   <button id="openGameBtn" onclick="openAIGame()">Open</button>
 </div>
+<canvas id="particles2"></canvas>
+
 <script>
 const canvas=document.getElementById('bg');
 const ctx=canvas.getContext('2d');
@@ -222,6 +226,125 @@ function openAIGame(){
   document.getElementById('popup').classList.remove('show');
 }
 switchTab('Tools', document.querySelector('.nav-button:nth-of-type(1)'));
+</script>
+
+<script>
+(function(){
+  const c = document.getElementById('particles2');
+  const ctx2 = c.getContext('2d');
+  let W2 = c.width = innerWidth;
+  let H2 = c.height = innerHeight;
+  const particles2 = [];
+  const settings = {
+    count: Math.round((W2 * H2) / 9000) + 40,
+    maxSize: 3.6,
+    minSize: 0.8,
+    speed: 0.2,
+    edgeGlow: true
+  };
+
+  function rand(min, max){ return Math.random()*(max-min)+min; }
+
+  function make(){
+    particles2.length = 0;
+    const n = settings.count;
+    for(let i=0;i<n;i++){
+      particles2.push({
+        x: Math.random()*W2,
+        y: Math.random()*H2,
+        vx: rand(-0.15,0.15),
+        vy: rand(-0.05,0.5),
+        r: rand(settings.minSize, settings.maxSize),
+        life: rand(60, 360),
+        age: Math.floor(rand(0,360)),
+        hue: 260 + Math.random()*60,
+        alpha: rand(0.06,0.28)
+      });
+    }
+  }
+
+  function drawParticle(p){
+    const grad = ctx2.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*4);
+    const h = Math.floor(p.hue);
+    grad.addColorStop(0, `hsla(${h},90%,70%,${p.alpha})`);
+    grad.addColorStop(0.35, `hsla(${h},85%,55%,${p.alpha*0.7})`);
+    grad.addColorStop(1, `hsla(${h},60%,40%,0)`);
+    ctx2.beginPath();
+    ctx2.fillStyle = grad;
+    ctx2.arc(p.x, p.y, p.r*4, 0, Math.PI*2);
+    ctx2.fill();
+  }
+
+  function step(dt){
+    ctx2.clearRect(0,0,W2,H2);
+    for(let i=0;i<particles2.length;i++){
+      const p = particles2[i];
+      p.age += dt * 0.06;
+      p.x += p.vx * dt * (0.9 + p.r*0.15);
+      p.y += p.vy * dt * (0.9 + p.r*0.15);
+      p.x += Math.sin((p.age + i*13)/1200) * 0.12;
+      p.y += Math.cos((p.age + i*7)/1000) * 0.08;
+
+      if(p.x > W2 + p.r*8) p.x = -p.r*8;
+      if(p.x < -p.r*8) p.x = W2 + p.r*8;
+      if(p.y > H2 + p.r*8) p.y = -p.r*8;
+      if(p.y < -p.r*8) p.y = H2 + p.r*8;
+
+      p.r += Math.sin(p.age/200 + i) * 0.02;
+      if(p.r < settings.minSize) p.r = settings.minSize;
+      if(p.r > settings.maxSize) p.r = settings.maxSize;
+
+      drawParticle(p);
+    }
+
+    for(let i=0;i<particles2.length;i++){
+      const a = particles2[i];
+      for(let j=i+1;j<particles2.length && j < i+8; j++){
+        const b = particles2[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const d2 = dx*dx + dy*dy;
+        if(d2 < 16000){
+          const dist = Math.sqrt(d2);
+          const alpha = Math.max(0, 0.12 - (dist/450));
+          ctx2.beginPath();
+          ctx2.strokeStyle = `hsla(${Math.floor((a.hue+b.hue)/2)},80%,60%,${alpha})`;
+          ctx2.lineWidth = 0.7;
+          ctx2.moveTo(a.x, a.y);
+          ctx2.lineTo(b.x, b.y);
+          ctx2.stroke();
+        }
+      }
+    }
+  }
+
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.min(40, now - last);
+    last = now;
+    step(dt);
+    requestAnimationFrame(loop);
+  }
+
+  function onResize(){
+    W2 = c.width = innerWidth;
+    H2 = c.height = innerHeight;
+    settings.count = Math.round((W2 * H2) / 9000) + 40;
+    make();
+  }
+  addEventListener('resize', onResize);
+
+  c.style.opacity = '0';
+  setTimeout(()=>{ c.style.transition = 'opacity 900ms ease'; c.style.opacity = '0.95'; }, 80);
+
+  make();
+  requestAnimationFrame(loop);
+
+  window.__sevParticlesLayer = {
+    show: ()=>{ c.style.opacity = '0.95'; },
+    hide: ()=>{ c.style.opacity = '0'; }
+  };
+})();
 </script>
 </body>
 </html>
