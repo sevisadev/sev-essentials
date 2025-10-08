@@ -11,26 +11,26 @@
       --accent-dark:#6a0dad;
       --panel:#4b097b;
       --text:#ffffff;
-      --glass: rgba(255,255,255,0.04);
-      --ease: cubic-bezier(.2,.9,.2,1);
+      --glass:rgba(255,255,255,0.04);
+      --ease:cubic-bezier(.2,.9,.2,1)
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:"Times New Roman",serif;background:var(--bg);color:var(--text);overflow:hidden}
-    canvas{position:fixed;top:0;left:0;z-index:-1;transition:opacity .5s var(--ease)}
-    .sidebar{position:fixed;top:0;left:0;width:220px;height:100%;background:linear-gradient(180deg,var(--accent),#9f53f0);display:flex;flex-direction:column;align-items:stretch;padding:0;border-right:1px solid rgba(0,0,0,.06);transform:translateX(0);animation:slideIn .45s var(--ease)}
+    canvas{position:fixed;top:0;left:0;z-index:-2;transition:opacity .5s var(--ease)}
+    .sidebar{position:fixed;top:0;left:0;width:220px;height:100%;background:linear-gradient(180deg,var(--accent),#9f53f0);display:flex;flex-direction:column;align-items:stretch;padding:0;border-right:1px solid rgba(0,0,0,.06);animation:slideIn .45s var(--ease)}
     @keyframes slideIn{from{transform:translateX(-12px);opacity:0}to{transform:none;opacity:1}}
-    .sidebar h1{margin:0;padding:20px 10px;text-align:center;font-size:28px;background:transparent}
-    .nav-button{display:block;width:90%;margin:10px 10px;padding:12px;background:var(--accent);color:var(--text);border:none;text-align:left;font-size:16px;cursor:pointer;border-top-right-radius:20px;border-bottom-right-radius:20px;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease)}
+    .sidebar h1{margin:0;padding:18px 12px;text-align:left;font-size:28px;background:transparent}
+    .nav-button{display:block;width:100%;padding:12px 14px;background:var(--accent);color:var(--text);border:none;text-align:left;font-size:16px;cursor:pointer;border-top-right-radius:20px;border-bottom-right-radius:20px;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease);outline:0}
     .nav-button:hover{transform:translateX(6px);background:var(--accent-dark)}
     .nav-button.active{background:var(--panel);box-shadow:inset 0 0 0 2px rgba(255,255,255,0.03)}
     .sidebar-launch-container{margin-top:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
-    .rounded-launch-button{padding:10px 20px;background:var(--accent);color:var(--text);border:none;border-radius:30px;cursor:pointer;font-size:15px;width:90%;align-self:center;transition:transform .18s var(--ease),background .18s var(--ease)}
+    .rounded-launch-button{padding:10px 20px;background:var(--accent);color:var(--text);border:none;border-radius:30px;cursor:pointer;font-size:15px;width:96%;align-self:flex-start;transition:transform .18s var(--ease),background .18s var(--ease)}
     .rounded-launch-button:hover{transform:translateY(-4px);background:var(--accent-dark)}
-    .sidebar-footer{padding:14px 10px;text-align:center;font-size:14px;color:var(--text);text-decoration:underline;cursor:pointer;background:transparent}
+    .sidebar-footer{padding:14px 12px;text-align:left;font-size:14px;color:var(--text);text-decoration:underline;cursor:pointer;background:transparent}
     .main-content{margin-left:220px;padding:28px;height:100vh;overflow:auto;transition:margin-left .4s var(--ease);display:flex;flex-direction:column;gap:12px}
     .title-container{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-    h1.title{font-size:34px;margin:0}
-    .subtitle{font-size:14px;color:#e9e3ff;opacity:.9;font-style:italic}
+    h1.title{font-size:34px;margin:0;animation:fadeIn .6s var(--ease)}
+    .subtitle{font-size:14px;color:#e9e3ff;opacity:.95;font-style:italic}
     #linkList{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;margin-top:20px;align-self:stretch;animation:fadeUp .45s var(--ease)}
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
     .github-btn{padding:12px;background:var(--accent);border:none;border-radius:10px;color:var(--text);font-size:14px;cursor:pointer;text-align:center;transition:transform .14s var(--ease),background .14s var(--ease),box-shadow .14s var(--ease)}
@@ -44,10 +44,10 @@
     #generateGameBtn:hover{transform:translateY(-4px);background:linear-gradient(180deg,var(--panel),#3b055f)}
     #popup{position:fixed;top:22px;right:22px;background:linear-gradient(90deg,var(--accent),#a86df4);padding:14px 16px;border-radius:12px;color:var(--text);display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;transform:translateY(-8px) scale(.98);transition:opacity .28s var(--ease),transform .28s var(--ease);z-index:999}
     #popup.show{opacity:1;transform:none}
+    #popup .txt{font-size:13px}
     #popup button{background:var(--panel);border:none;padding:8px 12px;border-radius:8px;color:var(--text);cursor:pointer}
-    #popup small{opacity:.95;font-size:13px}
     @keyframes floatY{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-    .nav-button, .github-btn, .rounded-launch-button{will-change:transform}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
     ::selection{background:#b07cfb;color:#120026}
     @media (max-width:720px){
       .sidebar{width:64px}
@@ -87,36 +87,40 @@
   </div>
 
   <div id="popup">
-    <small id="popupText">AI-generated game is ready.</small>
+    <div class="txt" id="popupText">AI-generated game is ready.</div>
     <button id="openGameBtn" onclick="openAIGame()">Open</button>
   </div>
 
   <script>
     const canvas=document.getElementById('bgCanvas');
     const ctx=canvas.getContext('2d');
-    let Particals=true;
     let width=canvas.width=window.innerWidth;
     let height=canvas.height=window.innerHeight;
-    const spheres=[];
-    for(let i=0;i<72;i++){spheres.push({x:Math.random()*(width-220)+220,y:Math.random()*height,radius:Math.random()*6+1.2,speed:Math.random()*1.6+0.2,drift:(Math.random()-0.5)*0.6})}
-    function animate(){
-      ctx.clearRect(0,0,width,height);
-      for(let s of spheres){
-        ctx.beginPath();
-        ctx.fillStyle='rgba(255,255,255,0.06)';
-        ctx.arc(s.x,s.y,s.radius,0,Math.PI*2);
-        ctx.fill();
-        s.y+=s.speed;
-        s.x+=s.drift;
-        s.speed+=Math.sin((Date.now()+s.radius*1000)/8000)*0.0006;
-        if(s.y>height+s.radius){s.y=-s.radius;s.x=Math.random()*width}
-        if(s.x>width+s.radius){s.x=-s.radius}
-        if(s.x<-s.radius){s.x=width+s.radius}
+    let particles=[];
+    function createParticles(){
+      particles=[];
+      for(let i=0;i<90;i++){
+        particles.push({x:Math.random()*width,y:Math.random()*height,rad:Math.random()*6+1,speed:Math.random()*1.6+0.2,drift:(Math.random()-0.5)*0.8,alpha:Math.random()*0.35+0.05});
       }
-      requestAnimationFrame(animate);
     }
-    animate();
-    window.addEventListener('resize',()=>{width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight});
+    createParticles();
+    function draw(){
+      ctx.clearRect(0,0,width,height);
+      for(let p of particles){
+        ctx.beginPath();
+        ctx.fillStyle='rgba(255,255,255,'+p.alpha+')';
+        ctx.arc(p.x,p.y,p.rad,0,Math.PI*2);
+        ctx.fill();
+        p.y+=p.speed;
+        p.x+=p.drift;
+        if(p.y>height+p.rad){p.y=-p.rad;p.x=Math.random()*width}
+        if(p.x>width+p.rad){p.x=-p.rad}
+        if(p.x<-p.rad){p.x=width+p.rad}
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+    window.addEventListener('resize',()=>{width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight;createParticles()});
 
     function reloadself(){
       fetch('https://raw.githubusercontent.com/sevisadev/sev-essentials/main/html%20holder.html').then(r=>{if(!r.ok)throw new Error('Network response was not ok');return r.text()}).then(html=>{const newWindow=window.open('about:blank','_blank');if(newWindow){newWindow.document.write(html);newWindow.document.close();window.close()}else{alert('Pop-up blocked. Please allow pop-ups for this site.')}}).catch(e=>alert('Failed to load HTML: '+e.message))
@@ -144,7 +148,7 @@
         listContainer.appendChild(input1);
         input1.addEventListener('input',event=>{document.title=event.target.value===''?'Sev Essentials':event.target.value});
       }
-      (tabLinks[tabName]||[]).forEach(link=>{
+      (tabLinks[tabName]||[]).forEach((link,i)=>{
         if(tabName==="Bookmarklets"){
           const linkElement=document.createElement('a');
           linkElement.className='github-btn';
@@ -154,12 +158,16 @@
           linkElement.onclick=event=>event.preventDefault();
           linkElement.draggable=true;
           linkElement.addEventListener('dragstart',event=>{event.dataTransfer.setData('text/plain',link.url)});
+          linkElement.style.animation='fadeUp .35s var(--ease)';
+          linkElement.style.animationDelay=(i*40)+'ms';
           listContainer.appendChild(linkElement);
         } else {
           const button=document.createElement('button');
           button.className='github-btn';
           button.innerText=link.name;
           if(link.url==="link"){button.onclick=()=>window.open(link.prox,'_blank')}else{button.onclick=()=>openGitHubHTML(link.url)}
+          button.style.animation='fadeUp .35s var(--ease)';
+          button.style.animationDelay=(i*40)+'ms';
           listContainer.appendChild(button);
         }
       });
@@ -172,50 +180,71 @@
     let aiGameCode="";
     const bc=new BroadcastChannel('sev-ai-game');
     bc.addEventListener('message',ev=>{
-      if(ev.data && ev.data.code){aiGameCode=ev.data.code;showPopup();}
+      if(ev.data && ev.data.status==='generating'){showGeneratingPopup()} else if(ev.data && ev.data.status==='ready' && ev.data.code){aiGameCode=ev.data.code;showReadyPopup()}
     });
+
+    function sanitizeCode(code){
+      if(!code) return '';
+      code=code.replace(/^\s*```(?:html)?\s*/i,'');
+      code=code.replace(/\s*```[\s\S]*$/,'');
+      code=code.replace(/^\uFEFF/,'');
+      return code.trim();
+    }
+
+    function notify(title,body){
+      if(window.Notification && Notification.permission==='granted'){new Notification(title,{body:body})}
+      else if(window.Notification && Notification.permission!=='denied'){Notification.requestPermission().then(p=>{if(p==='granted')new Notification(title,{body:body})})}
+    }
+
+    function showGeneratingPopup(){
+      const p=document.getElementById('popup');
+      const t=document.getElementById('popupText');
+      t.innerText='Generating game...';
+      p.classList.add('show');
+      notify('Sev Essentials','Generating game — this may take a moment');
+    }
+
+    function showReadyPopup(){
+      const p=document.getElementById('popup');
+      const t=document.getElementById('popupText');
+      t.innerText='AI-generated game is ready.';
+      p.classList.add('show');
+      notify('Sev Essentials','AI-generated game ready');
+      setTimeout(()=>{p.classList.remove('show')},24000);
+    }
 
     function generateGame(){
       const rawPrompt=document.getElementById('gamePrompt').value.trim();
-      if(!rawPrompt){return}
-      const instruction=`Please generate a complete, standalone, ready-to-run HTML5 game as a single document. Output only the full HTML document (starting with <!DOCTYPE html> and including all CSS and JavaScript inline). The game must be playable in a modern browser without external resources. Do not include any explanatory text or JSON wrappers. Make it well-structured, compact, and include smooth in-game animations. User prompt: `;
+      if(!rawPrompt) return;
+      aiGameCode='';
+      showGeneratingPopup();
+      bc.postMessage({status:'generating'});
+      const instruction='Please generate a complete, standalone, ready-to-run HTML5 game as a single document. Do NOT wrap code in Markdown/code fences. Output only the full HTML document starting with <!DOCTYPE html>. The document must be self-contained and playable in a modern browser. Include smooth animations and compact code. User prompt: ';
       const finalPrompt=instruction+rawPrompt;
       fetch('https://api.gggravity.org/meowster-ai.php',{
         method:'POST',
         headers:{'Content-Type':'application/x-www-form-urlencoded'},
         body:'prompt='+encodeURIComponent(finalPrompt)
-      }).then(r=>{
-        if(!r.ok)throw new Error('Network response was not ok');
-        return r.json();
-      }).then(data=>{
+      }).then(r=>{if(!r.ok)throw new Error('Network response was not ok');return r.json()}).then(data=>{
         const resp=(data && (data.response||data.result||data.output))||'';
         if(!resp){alert('No game code returned.');return}
-        aiGameCode=resp;
-        bc.postMessage({code:aiGameCode});
-        showPopup();
+        const cleaned=sanitizeCode(resp);
+        aiGameCode=cleaned;
+        bc.postMessage({status:'ready',code:aiGameCode});
+        showReadyPopup();
       }).catch(e=>{
         alert('Failed to generate game: '+(e.message||e));
+        const p=document.getElementById('popup');
+        p.classList.remove('show');
       });
     }
 
-    const popup=document.getElementById('popup');
-    const popupText=document.getElementById('popupText');
-
-    function showPopup(){
-      popup.classList.add('show');
-      setTimeout(()=>{popup.classList.remove('show')},24000);
-    }
-
     function openAIGame(){
-      if(!aiGameCode)return;
+      if(!aiGameCode){alert('No generated game available.');return}
       const w=window.open('about:blank','_blank');
-      if(w){
-        w.document.write(aiGameCode);
-        w.document.close();
-      } else {
-        alert('Pop-up blocked. Allow pop-ups to open the generated game.');
-      }
-      popup.classList.remove('show');
+      if(w){w.document.write(aiGameCode);w.document.close()} else {alert('Pop-up blocked. Allow pop-ups to open the generated game.')}
+      const p=document.getElementById('popup');
+      p.classList.remove('show');
     }
 
     switchTab('Tools',document.querySelector('.nav-button:nth-of-type(1)'));
