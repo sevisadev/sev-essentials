@@ -1,334 +1,208 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Sev Essentials</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    :root{
-      --bg:#4b097b;--accent:#8a2be2;--accent-dark:#6a0dad;--panel:#4b097b;--text:#ffffff;--glass:rgba(255,255,255,0.04);--ease:cubic-bezier(.2,.9,.2,1)
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:"Times New Roman",serif;background:var(--bg);color:var(--text);overflow:hidden}
-    canvas{position:fixed;top:0;left:0;z-index:-2;transition:opacity .5s var(--ease)}
-    /* Sidebar */
-    .sidebar{position:fixed;top:0;left:0;width:220px;height:100%;background:linear-gradient(180deg,var(--accent),#9f53f0);display:flex;flex-direction:column;align-items:stretch;padding:0;border-right:1px solid rgba(0,0,0,.06);animation:slideIn .45s var(--ease)}
-    @keyframes slideIn{from{transform:translateX(-12px);opacity:0}to{transform:none;opacity:1}}
-    .sidebar h1{margin:0;padding:18px 12px;text-align:left;font-size:28px;background:transparent;user-select:none}
-    /* Nav buttons flush left */
-    .nav-button{display:block;width:100%;padding:12px 14px;background:var(--accent);color:var(--text);border:none;text-align:left;font-size:16px;cursor:pointer;border-top-right-radius:20px;border-bottom-right-radius:20px;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease),opacity .25s var(--ease);outline:0}
-    .nav-button:hover{transform:translateX(6px);background:var(--accent-dark)}
-    .nav-button.active{background:var(--panel);box-shadow:inset 0 0 0 2px rgba(255,255,255,0.03)}
-    .sidebar-launch-container{margin-top:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
-    .rounded-launch-button{padding:10px 20px;background:var(--accent);color:var(--text);border:none;border-radius:30px;cursor:pointer;font-size:15px;width:96%;align-self:flex-start;transition:transform .18s var(--ease),background .18s var(--ease),opacity .25s var(--ease)}
-    .rounded-launch-button:hover{transform:translateY(-4px);background:var(--accent-dark)}
-    .sidebar-footer{padding:14px 12px;text-align:left;font-size:14px;color:var(--text);text-decoration:underline;cursor:pointer;background:transparent}
-    .main-content{margin-left:220px;padding:28px;height:100vh;overflow:auto;transition:margin-left .4s var(--ease);display:flex;flex-direction:column;gap:12px}
-    .title-container{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-    h1.title{font-size:34px;margin:0;animation:fadeIn .6s var(--ease);user-select:none}
-    .subtitle{font-size:14px;color:#e9e3ff;opacity:.95;font-style:italic}
-    #linkList{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;margin-top:20px;align-self:stretch;animation:fadeUp .45s var(--ease)}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-    .github-btn{padding:12px;background:var(--accent);border:none;border-radius:10px;color:var(--text);font-size:14px;cursor:pointer;text-align:center;transition:transform .14s var(--ease),background .14s var(--ease),box-shadow .14s var(--ease),opacity .25s var(--ease)}
-    .github-btn:hover{transform:translateY(-4px);background:var(--accent-dark);box-shadow:0 8px 24px rgba(0,0,0,.18)}
-    .ClokeName{padding:12px;background:var(--panel);border:1px solid var(--accent);color:var(--text);border-radius:4px;width:100%;max-width:420px}
-    #gameGenBar{position:fixed;bottom:0;left:220px;right:0;background:linear-gradient(90deg,var(--accent-dark),var(--accent));display:flex;gap:10px;padding:14px;align-items:center;justify-content:center;backdrop-filter: blur(6px);transform:translateY(110%);transition:transform .35s var(--ease);box-shadow:0 -10px 30px rgba(0,0,0,.35)}
-    #gameGenBar.visible{transform:translateY(0)}
-    #gamePrompt{flex:1;padding:10px;border-radius:8px;border:none;background:var(--panel);color:var(--text);font-size:15px;outline:2px solid transparent;transition:box-shadow .18s var(--ease)}
-    #gamePrompt:focus{box-shadow:0 6px 30px rgba(0,0,0,.3)}
-    #generateGameBtn{padding:10px 16px;border-radius:8px;border:none;background:var(--panel);color:var(--text);cursor:pointer;font-weight:600;letter-spacing:.2px;transition:transform .18s var(--ease),opacity .25s var(--ease)}
-    #generateGameBtn:hover{transform:translateY(-4px);background:linear-gradient(180deg,var(--panel),#3b055f)}
-    #popup{position:fixed;top:22px;right:22px;background:linear-gradient(90deg,var(--accent),#a86df4);padding:14px 16px;border-radius:12px;color:var(--text);display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;transform:translateY(-8px) scale(.98);transition:opacity .28s var(--ease),transform .28s var(--ease);z-index:999}
-    #popup.show{opacity:1;transform:none}
-    #popup .txt{font-size:13px}
-    #popup button{background:var(--panel);border:none;padding:8px 12px;border-radius:8px;color:var(--text);cursor:pointer}
-    /* faded state for buttons during generation */
-    .faded .github-btn, .faded .nav-button, .faded .rounded-launch-button{opacity:.28;transform:scale(.985);filter:blur(.4px)}
-    @keyframes floatY{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-    ::selection{background:#b07cfb;color:#120026}
-    @media (max-width:720px){
-      .sidebar{width:64px}
-      .main-content{margin-left:64px;padding:14px}
-      #gameGenBar{left:64px}
-      h1.title{font-size:22px}
-      .nav-button{font-size:12px;padding:10px}
-    }
-  </style>
+<meta charset="utf-8" />
+<title>Sev Essentials</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+:root{
+  --bg:#4b097b;--accent:#8a2be2;--accent-dark:#6a0dad;--panel:#4b097b;--text:#ffffff;--ease:cubic-bezier(.16,.84,.24,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Times New Roman",serif;background:var(--bg);color:var(--text);overflow:hidden}
+canvas{position:fixed;top:0;left:0;z-index:-2;opacity:1;transition:opacity .6s var(--ease)}
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100%;background:linear-gradient(180deg,var(--accent),#9f53f0);display:flex;flex-direction:column;padding:0;border-right:1px solid rgba(0,0,0,.06);transform:translateZ(0)}
+.sidebar h1{margin:0;padding:18px 12px;text-align:left;font-size:28px}
+.nav-button{display:block;width:100%;padding:12px 14px;background:var(--accent);color:var(--text);border:none;text-align:left;font-size:16px;cursor:pointer;border-top-right-radius:20px;border-bottom-right-radius:20px;outline:0;position:relative;overflow:hidden}
+.nav-button .label{display:inline-block;transform-origin:left center;transition:transform .28s var(--ease);will-change:transform}
+.nav-button:hover .label{transform:translateX(10px) scale(1.03)}
+.nav-button.active{background:var(--panel)}
+.sidebar-launch-container{margin-top:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.rounded-launch-button{padding:10px 20px;background:var(--accent);color:var(--text);border:none;border-radius:30px;cursor:pointer;font-size:15px;width:96%;align-self:flex-start;transition:transform .22s var(--ease)}
+.rounded-launch-button:hover{transform:translateY(-6px)}
+.sidebar-footer{padding:14px 12px;text-align:left;font-size:14px;color:var(--text);text-decoration:underline;cursor:pointer;background:transparent}
+.main-content{margin-left:220px;padding:28px;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:12px;transition:all .35s var(--ease)}
+.title-container{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1.title{font-size:34px;margin:0;animation:fadeIn .6s var(--ease)}
+.subtitle{font-size:14px;color:#e9e3ff;opacity:.95;font-style:italic}
+#linkList{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;margin-top:20px;align-self:stretch}
+.github-btn{padding:12px;background:var(--accent);border:none;border-radius:10px;color:var(--text);font-size:14px;cursor:pointer;text-align:center;transition:transform .18s var(--ease),box-shadow .18s var(--ease);will-change:transform}
+.github-btn:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,.28)}
+.ClokeName{padding:12px;background:var(--panel);border:1px solid var(--accent);color:var(--text);border-radius:4px;width:100%;max-width:420px}
+#gameGenBar{position:fixed;bottom:18px;left:240px;right:18px;background:linear-gradient(90deg,var(--accent-dark),var(--accent));display:flex;gap:10px;padding:12px;border-radius:12px;align-items:center;justify-content:center;backdrop-filter:blur(6px);transform:translateY(24px);transition:transform .36s var(--ease),opacity .36s var(--ease);opacity:0}
+#gameGenBar.visible{transform:translateY(0);opacity:1}
+#gamePrompt{flex:1;padding:10px;border-radius:10px;border:none;background:rgba(75,9,123,0.8);color:var(--text);font-size:15px;outline:2px solid transparent;transition:box-shadow .18s var(--ease)}
+#generateGameBtn{padding:10px 16px;border-radius:10px;border:none;background:linear-gradient(180deg,var(--panel),#3b055f);color:var(--text);cursor:pointer;font-weight:600;transition:transform .18s var(--ease)}
+#generateGameBtn:active{transform:translateY(2px)}
+#popup{position:fixed;top:22px;right:22px;background:linear-gradient(90deg,var(--accent),#a86df4);padding:14px 16px;border-radius:12px;color:var(--text);display:flex;align-items:center;gap:12px;box-shadow:0 18px 50px rgba(0,0,0,.36);opacity:0;transform:translateY(-8px) scale(.98);transition:opacity .28s var(--ease),transform .28s var(--ease);z-index:999}
+#popup.show{opacity:1;transform:none}
+#popup .txt{font-size:13px}
+#popup button{background:var(--panel);border:none;padding:8px 12px;border-radius:8px;color:var(--text);cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (max-width:720px){
+  .sidebar{width:64px}
+  .main-content{margin-left:64px;padding:14px}
+  #gameGenBar{left:74px;right:8px}
+  h1.title{font-size:22px}
+  .nav-button{font-size:12px;padding:10px}
+}
+</style>
 </head>
 <body>
-  <canvas id="bgCanvas"></canvas>
-
-  <div class="sidebar" id="sidebar">
-    <h1>Sev Essentials</h1>
-    <button class="nav-button active" onclick="switchTab('Tools', this)">Tools</button>
-    <button class="nav-button" onclick="switchTab('Games', this)">Games</button>
-    <button class="nav-button" onclick="switchTab('More', this)">More</button>
-
-    <div class="sidebar-launch-container">
-      <button class="rounded-launch-button" onclick="switchTab('Settings', this)">Settings</button>
-      <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
-    </div>
-
-    <a href="https://github.com/sevisadev/" target="_blank" class="sidebar-footer">Made By Sevvy Wevvy</a>
+<canvas id="bg"></canvas>
+<div class="sidebar" id="sidebar">
+  <h1>Sev Essentials</h1>
+  <button class="nav-button active" onclick="switchTab('Tools', this)"><span class="label">Tools</span></button>
+  <button class="nav-button" onclick="switchTab('Games', this)"><span class="label">Games</span></button>
+  <button class="nav-button" onclick="switchTab('More', this)"><span class="label">More</span></button>
+  <div class="sidebar-launch-container">
+    <button class="rounded-launch-button" onclick="switchTab('Settings', this)">Settings</button>
+    <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
   </div>
-
-  <div class="main-content" id="mainContent">
-    <div class="title-container">
-      <h1 class="title" id="tabTitle">Tools</h1>
-      <span class="subtitle" id="tabSubtitle"></span>
-    </div>
-    <div id="linkList"></div>
+  <a href="https://github.com/sevisadev/" target="_blank" class="sidebar-footer">Made By Sevvy Wevvy</a>
+</div>
+<div class="main-content" id="mainContent">
+  <div class="title-container">
+    <h1 class="title" id="tabTitle">Tools</h1>
+    <span class="subtitle" id="tabSubtitle"></span>
   </div>
-
-  <div id="gameGenBar">
-    <input id="gamePrompt" placeholder="Describe your full game (engine, mechanics, visuals)." />
-    <button id="generateGameBtn" onclick="generateGame()">Generate Game</button>
-  </div>
-
-  <div id="popup" aria-live="polite">
-    <div class="txt" id="popupText">AI-generated game is ready.</div>
-    <button id="openGameBtn" onclick="openAIGame()">Open</button>
-  </div>
-
-  <script>
-    /* Particles background */
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-    let particles = [];
-    function initParticles(count = 90){
-      particles = [];
-      for(let i=0;i<count;i++){
-        particles.push({
-          x: Math.random()*W,
-          y: Math.random()*H,
-          r: Math.random()*6+1,
-          s: Math.random()*1.6+0.2,
-          d: (Math.random()-0.5)*0.8,
-          a: Math.random()*0.35+0.05
-        });
-      }
+  <div id="linkList"></div>
+</div>
+<div id="gameGenBar">
+  <input id="gamePrompt" placeholder="Describe your full game (engine, mechanics, visuals)." />
+  <button id="generateGameBtn" onclick="generateGame()">Generate Game</button>
+</div>
+<div id="popup" aria-live="polite">
+  <div class="txt" id="popupText">AI-generated game is ready.</div>
+  <button id="openGameBtn" onclick="openAIGame()">Open</button>
+</div>
+<script>
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+let W=canvas.width=innerWidth;
+let H=canvas.height=innerHeight;
+let parts=[];
+function makeParticles(n=110){
+  parts=[];
+  for(let i=0;i<n;i++){
+    parts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*6+1,s:Math.random()*1.6+0.2,dx:(Math.random()-0.5)*0.8,a:Math.random()*0.45+0.05});
+  }
+}
+makeParticles();
+function tick(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of parts){
+    ctx.beginPath();
+    ctx.fillStyle='rgba(255,255,255,'+p.a+')';
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+    p.y+=p.s;
+    p.x+=p.dx + Math.sin((Date.now()+p.r*200)/1200)*0.2;
+    if(p.y>H+p.r){p.y=-p.r;p.x=Math.random()*W}
+    if(p.x>W+p.r){p.x=-p.r}
+    if(p.x<-p.r){p.x=W+p.r}
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+addEventListener('resize',()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight;makeParticles();});
+function reloadself(){
+  fetch('https://raw.githubusercontent.com/sevisadev/sev-essentials/main/html%20holder.html').then(r=>{if(!r.ok)throw new Error('Network response was not ok');return r.text()}).then(html=>{const nw=window.open('about:blank','_blank');if(nw){nw.document.write(html);nw.document.close();window.close()}else alert('Pop-up blocked. Please allow pop-ups for this site.')}).catch(e=>alert('Failed to load HTML: '+e.message));
+}
+const tabLinks={
+  "Tools":[{name:"HTML Runner",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/htmlr.html"},{name:"Bookmarklet Maker",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/bookmarklet.html"},{name:"Sev Encoder",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/B64.html"},{name:"Sev HTML One-Liner",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/1l.html"},{name:"Sev Mode Switcher",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/sms.html"},{name:"Sev File2HTML",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/sfth.html"}],
+  "Games":[{name:"Snake Game",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/snake.html"},{name:"Tetris",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/tetris.html"},{name:"Sev Clicker",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-clicker.html"},{name:"Sev Pulse",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-pulse.html"},{name:"Sev's Minesweeper",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sevs-minesweeper.html"},{name:"Sev's Connect The Pipes",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/connect-the-pipes.html"},{name:"HTML Tower Defence",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/html-td.html"},{name:"Racing",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/car-game.html"}],
+  "More":[{name:"Sev Browser",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/sev-browser.html"},{name:"Fireworks",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/fireworks.html"},{name:"Sev Cursor Playground",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/cursorplayground.html"},{name:"Github",url:"link",prox:"https://github.com/sevisadev/sev-essentials/tree/main"}]
+};
+function switchTab(name, btn){
+  document.querySelectorAll('.nav-button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('tabTitle').innerText = name;
+  const subtitle = document.getElementById('tabSubtitle');
+  if(name==="Games") subtitle.innerText="You may have to click on some games when they are opened for them to work"; else if(name==="Bookmarklets") subtitle.innerText="Drag the bookmarklet you want into your bookmarks bar"; else if(name==="Settings") subtitle.innerText="Grayson Shults"; else subtitle.innerText="";
+  const list=document.getElementById('linkList'); list.innerHTML='';
+  document.getElementById('gameGenBar').classList.toggle('visible', name==="Games");
+  if(name==="Settings"){
+    const input=document.createElement('input'); input.type='text'; input.className='ClokeName'; input.placeholder='Tab Name'; list.appendChild(input);
+    input.addEventListener('input',e=>{document.title = e.target.value===''?'Sev Essentials':e.target.value});
+  }
+  (tabLinks[name]||[]).forEach((l,i)=>{
+    if(name==="Bookmarklets"){
+      const a=document.createElement('a'); a.className='github-btn'; a.innerText=l.name; a.href=l.url; a.target='_blank'; a.onclick=e=>e.preventDefault(); a.draggable=true; a.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',l.url)); a.style.transitionDelay=(i*30)+'ms'; list.appendChild(a);
+    } else {
+      const b=document.createElement('button'); b.className='github-btn'; b.innerText=l.name;
+      if(l.url==="link") b.onclick=()=>window.open(l.prox,'_blank'); else b.onclick=()=>openGitHubHTML(l.url);
+      b.style.transitionDelay=(i*30)+'ms'; list.appendChild(b);
     }
-    initParticles();
-    function renderParticles(){
-      ctx.clearRect(0,0,W,H);
-      for(const p of particles){
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(255,255,255,'+p.a+')';
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fill();
-        p.y += p.s;
-        p.x += p.d;
-        if(p.y > H + p.r){ p.y = -p.r; p.x = Math.random()*W; }
-        if(p.x > W + p.r){ p.x = -p.r; }
-        if(p.x < -p.r){ p.x = W + p.r; }
-      }
-      requestAnimationFrame(renderParticles);
-    }
-    renderParticles();
-    window.addEventListener('resize', ()=>{ W = canvas.width = innerWidth; H = canvas.height = innerHeight; initParticles(); });
-
-    /* Basic app UI */
-    function reloadself(){
-      fetch('https://raw.githubusercontent.com/sevisadev/sev-essentials/main/html%20holder.html')
-        .then(r=>{ if(!r.ok) throw new Error('Network response was not ok'); return r.text() })
-        .then(html=>{ const newWindow = window.open('about:blank','_blank'); if(newWindow){ newWindow.document.write(html); newWindow.document.close(); window.close() } else alert('Pop-up blocked. Please allow pop-ups for this site.') })
-        .catch(e=>alert('Failed to load HTML: '+e.message));
-    }
-
-    const tabLinks = {
-      "Tools":[
-        {name:"HTML Runner",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/htmlr.html"},
-        {name:"Bookmarklet Maker",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/bookmarklet.html"},
-        {name:"Sev Encoder",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/B64.html"},
-        {name:"Sev HTML One-Liner",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/1l.html"},
-        {name:"Sev Mode Switcher",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/sms.html"},
-        {name:"Sev File2HTML",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/sfth.html"}
-      ],
-      "Games":[
-        {name:"Snake Game",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/snake.html"},
-        {name:"Tetris",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/tetris.html"},
-        {name:"Sev Clicker",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-clicker.html"},
-        {name:"Sev Pulse",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-pulse.html"},
-        {name:"Sev's Minesweeper",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sevs-minesweeper.html"},
-        {name:"Sev's Connect The Pipes",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/connect-the-pipes.html"},
-        {name:"HTML Tower Defence",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/html-td.html"},
-        {name:"Racing",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/car-game.html"}
-      ],
-      "More":[
-        {name:"Sev Browser",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/sev-browser.html"},
-        {name:"Fireworks",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/fireworks.html"},
-        {name:"Sev Cursor Playground",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/cursorplayground.html"},
-        {name:"Github",url:"link",prox:"https://github.com/sevisadev/sev-essentials/tree/main"}
-      ]
-    };
-
-    function switchTab(tabName, btn){
-      document.querySelectorAll('.nav-button').forEach(b=>b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
-      document.getElementById('tabTitle').innerText = tabName;
-      const subtitle = document.getElementById('tabSubtitle');
-      if (tabName === "Games") subtitle.innerText = "You may have to click on some games when they are opened for them to work";
-      else if (tabName === "Bookmarklets") subtitle.innerText = "Drag the bookmarklet you want into your bookmarks bar";
-      else if (tabName === "Settings") subtitle.innerText = "Grayson Shults";
-      else subtitle.innerText = "";
-      const listContainer = document.getElementById('linkList');
-      listContainer.innerHTML = '';
-      document.getElementById('gameGenBar').classList.toggle('visible', tabName === "Games");
-
-      if(tabName === "Settings"){
-        const input1 = document.createElement('input');
-        input1.type = 'text';
-        input1.className = 'ClokeName';
-        input1.placeholder = 'Tab Name';
-        listContainer.appendChild(input1);
-        input1.addEventListener('input', event => { document.title = event.target.value === '' ? 'Sev Essentials' : event.target.value });
-      }
-
-      (tabLinks[tabName] || []).forEach((link, i) => {
-        if (tabName === "Bookmarklets"){
-          const a = document.createElement('a');
-          a.className = 'github-btn';
-          a.innerText = link.name;
-          a.href = link.url;
-          a.target = '_blank';
-          a.onclick = e => e.preventDefault();
-          a.draggable = true;
-          a.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', link.url));
-          a.style.animation = 'fadeUp .35s var(--ease)';
-          a.style.animationDelay = (i*40) + 'ms';
-          listContainer.appendChild(a);
-        } else {
-          const btn = document.createElement('button');
-          btn.className = 'github-btn';
-          btn.innerText = link.name;
-          if (link.url === "link") btn.onclick = () => window.open(link.prox, '_blank');
-          else btn.onclick = () => openGitHubHTML(link.url);
-          btn.style.animation = 'fadeUp .35s var(--ease)';
-          btn.style.animationDelay = (i*40) + 'ms';
-          listContainer.appendChild(btn);
-        }
-      });
-    }
-
-    function openGitHubHTML(url){
-      fetch(url).then(r => r.text()).then(html => {
-        const newTab = window.open('about:blank','_blank');
-        newTab.document.write(html);
-        newTab.document.close();
-      }).catch(err => alert('Failed to load HTML: ' + err));
-    }
-
-    /* BroadcastChannel for cross-tab notifications */
-    let aiGameCode = "";
-    const bc = new BroadcastChannel('sev-ai-game');
-    bc.addEventListener('message', e => {
-      if (!e.data) return;
-      if (e.data.status === 'generating') {
-        setUIFaded(true);
-        showGeneratingPopup();
-      } else if (e.data.status === 'ready') {
-        if (e.data.code) aiGameCode = e.data.code;
-        setUIFaded(false);
-        showReadyPopup();
-      }
-    });
-
-    /* sanitize returned AI code (strip markdown fences and BOM) */
-    function sanitizeCode(code){
-      if(!code) return '';
-      code = code.replace(/^\uFEFF/, '');
-      code = code.replace(/^\s*```(?:html)?\s*/i,'');
-      code = code.replace(/\s*```[\s\S]*$/,'');
-      return code.trim();
-    }
-
-    /* UI fade control */
-    function setUIFaded(state){
-      if(state) document.documentElement.classList.add('faded');
-      else document.documentElement.classList.remove('faded');
-      // hide open button while generating
-      const openBtn = document.getElementById('openGameBtn');
-      if(openBtn) openBtn.style.display = state ? 'none' : 'inline-block';
-    }
-
-    /* notifications & popup behavior */
-    function notify(title, body){
-      if(window.Notification && Notification.permission === 'granted'){
-        try { new Notification(title, { body: body }); } catch(e){}
-      } else if(window.Notification && Notification.permission !== 'denied'){
-        Notification.requestPermission().then(p => { if(p === 'granted') try { new Notification(title, { body: body }); } catch(e){} });
-      }
-    }
-
-    const popupEl = document.getElementById('popup');
-    const popupText = document.getElementById('popupText');
-
-    function showGeneratingPopup(){
-      popupText.innerText = 'Generating game...';
-      popupEl.classList.add('show');
-      notify('Sev Essentials','Generating game — this may take a moment');
-      // do not show open button while generating (setUIFaded handles)
-    }
-
-    function showReadyPopup(){
-      popupText.innerText = 'AI-generated game is ready.';
-      popupEl.classList.add('show');
-      setTimeout(()=> popupEl.classList.remove('show'), 24000);
-      notify('Sev Essentials','AI-generated game ready');
-    }
-
-    /* game generation */
-    function generateGame(){
-      const rawPrompt = document.getElementById('gamePrompt').value.trim();
-      if(!rawPrompt) return;
-      aiGameCode = '';
-      // indicate generating locally and across tabs
-      setUIFaded(true);
-      showGeneratingPopup();
-      bc.postMessage({status:'generating'});
-      const instruction = 'Please generate a complete, standalone, ready-to-run HTML5 game as a single document. Do NOT wrap code in Markdown/code fences. Output only the full HTML document starting with <!DOCTYPE html>. The document must be self-contained and playable in a modern browser. Include smooth animations and compact code. User prompt: ';
-      const finalPrompt = instruction + rawPrompt;
-      fetch('https://api.gggravity.org/meowster-ai.php', {
-        method: 'POST',
-        headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: 'prompt=' + encodeURIComponent(finalPrompt)
-      })
-      .then(r => {
-        if (!r.ok) throw new Error('Network response was not ok');
-        return r.json();
-      })
-      .then(data => {
-        const resp = (data && (data.response || data.result || data.output)) || '';
-        if(!resp){ alert('No game code returned.'); setUIFaded(false); popupEl.classList.remove('show'); bc.postMessage({status:'ready', code:''}); return; }
-        const cleaned = sanitizeCode(resp);
-        aiGameCode = cleaned;
-        // broadcast ready
-        bc.postMessage({status:'ready', code: aiGameCode});
-        setUIFaded(false);
-        showReadyPopup();
-      })
-      .catch(e => {
-        alert('Failed to generate game: ' + (e.message || e));
-        setUIFaded(false);
-        popupEl.classList.remove('show');
-        bc.postMessage({status:'ready', code: ''});
-      });
-    }
-
-    function openAIGame(){
-      if(!aiGameCode){ alert('No generated game available.'); return; }
-      const w = window.open('about:blank', '_blank');
-      if(!w) { alert('Pop-up blocked. Allow pop-ups to open the generated game.'); return; }
-      w.document.write(aiGameCode);
-      w.document.close();
-      popupEl.classList.remove('show');
-    }
-
-    /* init default tab */
-    switchTab('Tools', document.querySelector('.nav-button:nth-of-type(1)'));
-  </script>
+  });
+}
+function openGitHubHTML(url){ fetch(url).then(r=>r.text()).then(html=>{const w=window.open('about:blank','_blank'); w.document.write(html); w.document.close();}).catch(e=>alert('Failed to load HTML: '+e));}
+let aiGameCode="";
+const bc=new BroadcastChannel('sev-ai-game');
+bc.addEventListener('message',ev=>{
+  if(!ev.data) return;
+  if(ev.data.status==='generating') { localGenerating(true); showGenerating(); }
+  if(ev.data.status==='ready') { if(ev.data.code) aiGameCode=ev.data.code; localGenerating(false); showReady(); }
+});
+function sanitize(code){
+  if(!code) return '';
+  code = code.replace(/^\uFEFF/,'');
+  code = code.replace(/^\s*```(?:html)?\s*/i,'');
+  code = code.replace(/\s*```[\s\S]*$/,'');
+  return code.trim();
+}
+let generating=false;
+function localGenerating(state){
+  generating=state;
+  const openBtn=document.getElementById('openGameBtn');
+  openBtn.style.display = state ? 'none' : 'inline-block';
+  const genBtn=document.getElementById('generateGameBtn');
+  genBtn.disabled = state;
+  genBtn.style.opacity = state ? '0.7' : '1';
+}
+function notify(title,body){
+  if(window.Notification && Notification.permission==='granted'){ try{ new Notification(title,{body:body}) }catch(e){} }
+  else if(window.Notification && Notification.permission!=='denied'){ Notification.requestPermission().then(p=>{ if(p==='granted'){ try{ new Notification(title,{body:body}) }catch(e){} }})}
+}
+let popupTimer=0;
+function showGenerating(){
+  const p=document.getElementById('popup'); const t=document.getElementById('popupText');
+  t.innerText='Generating game...'; p.classList.add('show'); notify('Sev Essentials','Generating game — this may take a moment'); clearTimeout(popupTimer); popupTimer=setTimeout(()=>{p.classList.remove('show')},10000);
+}
+function showReady(){
+  const p=document.getElementById('popup'); const t=document.getElementById('popupText'); t.innerText='AI-generated game is ready.'; p.classList.add('show'); notify('Sev Essentials','AI-generated game ready'); clearTimeout(popupTimer); popupTimer=setTimeout(()=>{p.classList.remove('show')},10000);
+}
+function generateGame(){
+  const raw=document.getElementById('gamePrompt').value.trim();
+  if(!raw) return;
+  aiGameCode=''; localGenerating(true); showGenerating(); bc.postMessage({status:'generating'});
+  const detailedInstruction = "Produce a single-file, fully self-contained, production-quality HTML5 game. The output must be only the complete HTML document starting with <!DOCTYPE html>. The game should be visually rich, polished, and immediately playable in a modern browser without external resources. Use semantic structure, efficient and readable code, inline CSS and JavaScript, and avoid unnecessary comments. Include a responsive canvas or SVG game area, clear player controls, smooth physics or movement, polished animations for UI and gameplay, sound placeholders using WebAudio (no external assets required), accessible controls and instructions, scoring, restart and pause functionality, and gracefully handle different screen sizes. Implement optimized update/render loops, delta-time based motion, object pooling if needed, deterministic collisions, and frame-rate independent logic. Provide an attractive theme, detailed entity behavior, polished particle and UI animations, transitions between states (menu/play/game-over), and include keyboard and touch controls. Ensure minimal bundle size, avoid eval or unsafe patterns, and escape user content where required. Make the gameplay satisfy the user's prompt and include a short in-game tutorial overlay. Now produce the game: ";
+  const finalPrompt = detailedInstruction + raw;
+  fetch('https://api.gggravity.org/meowster-ai.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'prompt='+encodeURIComponent(finalPrompt)
+  }).then(r=>{ if(!r.ok) throw new Error('Network response was not ok'); return r.json(); }).then(data=>{
+    const resp=(data && (data.response||data.result||data.output))||'';
+    if(!resp){ alert('No game code returned.'); localGenerating(false); bc.postMessage({status:'ready',code:''}); return; }
+    const cleaned=sanitize(resp);
+    aiGameCode=cleaned;
+    bc.postMessage({status:'ready',code:aiGameCode});
+    localGenerating(false);
+    showReady();
+  }).catch(e=>{
+    alert('Failed to generate game: '+(e.message||e));
+    localGenerating(false); document.getElementById('popup').classList.remove('show'); bc.postMessage({status:'ready',code:''});
+  });
+}
+function openAIGame(){
+  if(!aiGameCode){ alert('No generated game available.'); return; }
+  const w=window.open('about:blank','_blank');
+  if(!w){ alert('Pop-up blocked. Allow pop-ups to open the generated game.'); return; }
+  w.document.write(aiGameCode); w.document.close();
+  document.getElementById('popup').classList.remove('show');
+}
+switchTab('Tools', document.querySelector('.nav-button:nth-of-type(1)'));
+</script>
 </body>
 </html>
