@@ -176,8 +176,27 @@ function generateGame(){
   const raw=document.getElementById('gamePrompt').value.trim();
   if(!raw) return;
   aiGameCode=''; localGenerating(true); showGenerating(); bc.postMessage({status:'generating'});
-  const detailedInstruction = "Produce a single-file, fully self-contained, production-quality HTML5 game. The output must be only the complete HTML document starting with <!DOCTYPE html>. The game should be visually rich, polished, and immediately playable in a modern browser without external resources. Use semantic structure, efficient and readable code, inline CSS and JavaScript, and avoid unnecessary comments. Include a responsive canvas or SVG game area, clear player controls, smooth physics or movement, polished animations for UI and gameplay, sound placeholders using WebAudio (no external assets required), accessible controls and instructions, scoring, restart and pause functionality, and gracefully handle different screen sizes. Implement optimized update/render loops, delta-time based motion, object pooling if needed, deterministic collisions, and frame-rate independent logic. Provide an attractive theme, detailed entity behavior, polished particle and UI animations, transitions between states (menu/play/game-over), and include keyboard and touch controls. Ensure minimal bundle size, avoid eval or unsafe patterns, and escape user content where required. Make the gameplay satisfy the user's prompt and include a short in-game tutorial overlay. Now produce the game: ";
-  const finalPrompt = detailedInstruction + raw;
+  const instruction = `
+You are to generate a COMPLETE, fully self-contained, single-file HTML5 game. Your output must be ONLY the full HTML document, starting with <!DOCTYPE html>. Do not include markdown formatting, explanations, or code fences. The game must be visually rich and high-quality using only CSS, Canvas, SVG, and dynamically generated visuals — NO external images, NO internal base64-encoded images, and NO external dependencies. Everything must be drawn, styled, or animated programmatically.
+
+The game must be modern, polished, responsive, and immediately playable on desktop and mobile browsers. Use clean semantic HTML, inline CSS, and inline JavaScript. Include:
+- A responsive layout with smooth transitions and UI animations.
+- High-quality visuals using Canvas or SVG (e.g., gradients, shadows, lighting effects, particles).
+- A well-designed title screen, in-game UI, pause menu, and game over screen.
+- Keyboard and touch controls with clear instructions.
+- Smooth frame-rate–independent movement and animations using delta time.
+- Efficient game loops with requestAnimationFrame and proper state management.
+- Detailed gameplay mechanics, power-ups, enemies or obstacles, scoring, and difficulty progression.
+- In-game tutorial overlay that explains controls clearly.
+- Sound effects using Web Audio API (no external files).
+- Graceful handling of different screen sizes and resolutions.
+- Optimized code structure without unnecessary comments or libraries.
+
+The game should feel like a complete, professional browser game — polished, engaging, and technically well-built. Focus on gameplay depth, smooth performance, and a visually appealing presentation using only HTML5/CSS/JS features. Build all art assets dynamically via code.
+
+Now create the best possible game that fully satisfies the user's concept:
+`;
+const finalPrompt = instruction + raw;
   fetch('https://api.gggravity.org/meowster-ai.php',{
     method:'POST',
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
