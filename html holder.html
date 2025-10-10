@@ -61,7 +61,7 @@ h1.title{font-size:34px;margin:0;animation:fadeIn .6s var(--ease)}
     <button class="rounded-launch-button" onclick="switchTab('Settings', this)">Settings</button>
     <button class="rounded-launch-button" onclick="reloadself()">Reload</button>
   </div>
-  <a href="https://github.com/sevisadev/" target="_blank" class="sidebar-footer">Made By Sevvy Wevvy</a>
+  <a href="https://github.com/sevvy-wevvy/" target="_blank" class="sidebar-footer">Made By Sevvy Wevvy</a>
 </div>
 <div class="main-content" id="mainContent">
   <div class="title-container">
@@ -111,32 +111,32 @@ function tick(){
 tick();
 addEventListener('resize',()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight;makeParticles();});
 function reloadself(){
-  fetch('https://raw.githubusercontent.com/sevisadev/sev-essentials/main/html%20holder.html').then(r=>{if(!r.ok)throw new Error('Network response was not ok');return r.text()}).then(html=>{const nw=window.open('about:blank','_blank');if(nw){nw.document.write(html);nw.document.close();window.close()}else alert('Pop-up blocked. Please allow pop-ups for this site.')}).catch(e=>alert('Failed to load HTML: '+e.message));
+  fetch('https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/main/html%20holder.html').then(r=>{if(!r.ok)throw new Error('Network response was not ok');return r.text()}).then(html=>{const nw=window.open('about:blank','_blank');if(nw){nw.document.write(html);nw.document.close();window.close()}else alert('Pop-up blocked. Please allow pop-ups for this site.')}).catch(e=>alert('Failed to load HTML: '+e.message));
 }
 const tabLinks={
-  "Tools":[{name:"HTML Runner",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/htmlr.html"},
-           {name:"Bookmarklet Maker",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/bookmarklet.html"},
-           {name:"Sev Encoder",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/B64.html"},
-           {name:"Sev HTML One-Liner",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/1l.html"},
-           {name:"Sev Mode Switcher",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/sms.html"},
-           {name:"Sev File2HTML",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/tools/sfth.html"}
+  "Tools":[{name:"HTML Runner",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/tools/htmlr.html"},
+           {name:"Bookmarklet Maker",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/tools/bookmarklet.html"},
+           {name:"Sev Encoder",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/tools/B64.html"},
+           {name:"Sev HTML One-Liner",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/tools/1l.html"},
+           {name:"Sev Mode Switcher",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/tools/sms.html"},
+           {name:"Sev File2HTML",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/tools/sfth.html"}
           ],
   
-  "Games":[{name:"Snake Game",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/snake.html"},
-           {name:"Tetris",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/tetris.html"},
-           {name:"Sev Clicker",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-clicker.html"},
-           {name:"Sev Pulse",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sev-pulse.html"},
-           {name:"Sev's Minesweeper (OLD)",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/sevs-minesweeper.html"},
-           {name:"Sev's Connect The Pipes",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/connect-the-pipes.html"},
-           {name:"HTML Tower Defence",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/html-td.html"},
-           {name:"Racing",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/car-game.html"},
-           {name:"Meth Mines",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/games/mm.html"}
+  "Games":[{name:"Snake Game",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/snake.html"},
+           {name:"Tetris",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/tetris.html"},
+           {name:"Sev Clicker",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/sev-clicker.html"},
+           {name:"Sev Pulse",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/sev-pulse.html"},
+           {name:"Sev's Minesweeper (OLD)",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/sevs-minesweeper.html"},
+           {name:"Sev's Connect The Pipes",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/connect-the-pipes.html"},
+           {name:"HTML Tower Defence",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/html-td.html"},
+           {name:"Racing",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/car-game.html"},
+           {name:"Meth Mines",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/games/mm.html"}
           ],
   
-  "More":[{name:"Sev Browser",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/sev-browser.html"},
-          {name:"Fireworks",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/fireworks.html"},
-          {name:"Sev Cursor Playground",url:"https://raw.githubusercontent.com/sevisadev/sev-essentials/refs/heads/main/html/more/cursorplayground.html"},
-          {name:"Github",url:"link",prox:"https://github.com/sevisadev/sev-essentials/tree/main"}
+  "More":[{name:"Sev Browser",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/more/sev-browser.html"},
+          {name:"Fireworks",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/more/fireworks.html"},
+          {name:"Sev Cursor Playground",url:"https://raw.githubusercontent.com/sevvy-wevvy/sev-essentials/refs/heads/main/html/more/cursorplayground.html"},
+          {name:"Github",url:"link",prox:"https://github.com/sevvy-wevvy/sev-essentials/tree/main"}
          ]
 };
 function switchTab(name, btn){
